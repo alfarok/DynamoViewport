@@ -1,0 +1,4 @@
+﻿<ViewExtensionDefinition>
+  <AssemblyPath>..\ViewportViewExtension.dll</AssemblyPath>
+  <TypeName>ViewportViewExtension.ViewportViewExtension</TypeName>
+</ViewExtensionDefinition>

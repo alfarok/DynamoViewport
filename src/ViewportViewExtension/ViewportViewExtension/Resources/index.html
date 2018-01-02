@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #cccccc;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+
+				background-color: rgba(225,225,225,0);
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				position: absolute;
+				top: 0px; width: 100%;
+				padding: 5px;
+			}
+
+			a {
+
+				color: #0080ff;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<div id="info"></div>
+
+		<script src="assests/js/three.min.js"></script>
+		<script src="assests/js/OrbitControls.js"></script>
+
+		<script>
+            
+			var container;
+
+			var camera, scene, renderer, controls;
+
+			var pCam, oCam;
+
+			var defaultShadedMaterial;
+			var defaultWireFrameMaterial;
+
+			//var mesh;
+
+			var meshes = [];
+
+			var activeMeshes = [];
+
+			var rotation = false;
+
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2(), INTERSECTED;
+
+			var colorHistory;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.getElementById( 'container' );
+
+				var aspect = window.innerWidth / window.innerHeight;
+				var frustumSize = 1000;
+				pCam = new THREE.PerspectiveCamera(45, aspect, 1, 10000);
+				oCam = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, 2000);
+				camera = pCam;
+
+				scene = new THREE.Scene();
+				//scene.fog = new THREE.Fog(0x050505, 2000, 3500);
+				scene.add(camera);
+
+				let ambientLight = new THREE.AmbientLight(0x404040);
+				scene.add(ambientLight);
+
+				//var directionalLight = new THREE.DirectionalLight( 0xffffff );
+				//directionalLight.position.set( 1, 1, 1 ).normalize();
+			   
+				var pointLight = new THREE.PointLight(0xffffff, 1);
+				camera.add(pointLight);
+
+			    // Default mesh material
+				defaultShadedMaterial = new THREE.MeshLambertMaterial({
+				    color: 0xbbbbbb, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
+				});
+
+				defaultShadedMaterial.flatShading = false;
+
+			    // Default wireframe materal
+				defaultWireFrameMaterial = new THREE.MeshBasicMaterial({
+				    color: 0xbbbbbb, wireframe: true
+				});
+
+                // TODO break out into separate func
+				// Build Grid and Axis
+				var size = 100;
+				var step = 5;
+				
+				var gridHelper = new THREE.Geometry();
+				var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.4 } );
+
+				for ( var i = - size; i <= size; i += step ) {
+
+					gridHelper.vertices.push( new THREE.Vector3( - size, 0, i ) );
+					gridHelper.vertices.push( new THREE.Vector3(   size, 0, i ) );
+
+					gridHelper.vertices.push( new THREE.Vector3( i, 0, - size ) );
+					gridHelper.vertices.push( new THREE.Vector3( i, 0,   size ) );
+
+				}
+
+				var gridLines = new THREE.Line( gridHelper, lineMaterial, THREE.LinePieces );
+				scene.add( gridLines );
+
+				var axisHelper = new THREE.AxisHelper(100);
+				axisHelper.translateY(.05);
+				scene.add(axisHelper);
+
+				controls = new THREE.OrbitControls( camera );
+				camera.position.set( 0, 20, 100 );
+				controls.update();
+
+				//
+
+				renderer = new THREE.WebGLRenderer( { antialias: false, alpha : true } );
+				renderer.setClearColor(0x000000, 0);
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				container.appendChild( renderer.domElement );
+
+				//
+
+				window.addEventListener('resize', onWindowResize, false);
+				window.addEventListener('mousemove', onMouseMove, false);
+				window.requestAnimationFrame(render);
+				document.addEventListener("keydown", onDocumentKeyDown, false);
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				controls.update();
+
+				render();
+			}
+
+			function render() {
+
+				//var time = Date.now() * 0.001;
+
+			    if (rotation == true) {
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].rotation.x += 0.005;
+			            meshes[i].rotation.y += 0.005;
+			        }
+			    }
+
+			    // update the picking ray with the camera and mouse position
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(scene.children);
+
+				if (intersects.length > 0) {
+				    if (INTERSECTED != intersects[0].object && intersects[0].object.isMesh == true) {
+				        console.log(intersects[0].object.geometry.faces);
+				        INTERSECTED = intersects[0].object;
+				        INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+				        //INTERSECTED.material.emissive.setHex(0xff0000);
+				        colorHistory = INTERSECTED.material.color.getHex();
+				        INTERSECTED.material.color.setHex(0x009eff);
+				    }
+				} else {
+				    if (INTERSECTED) INTERSECTED.material.color.setHex(0xbbbbbb);
+				    INTERSECTED = null;
+				}
+
+				renderer.render( scene, camera );
+			}
+
+			function onMouseMove(event) {
+
+			    // calculate mouse position in normalized device coordinates
+			    // (-1 to +1) for both components
+
+			    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+			    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+			}
+
+            // Helper function to build THREE mesh from json
+			function renderDynamoMesh(meshData) {
+
+			    var name = meshData.name;
+			    var status = meshData.transactionType;
+
+			    if (status == "remove") {
+			        console.log("mesh remove");
+			        var guid = scene.getObjectByName(name);
+			        scene.remove(guid);
+			        activeMeshes.pop(name);
+			        return;
+			    }
+			    else if (status == "togglePreview") {
+			        console.log("hide/show event");
+			        var guid = scene.getObjectByName(name);
+			        if (meshData.displayPreview == true) {
+			            guid.visible = true;
+			        }
+			        else {
+			            guid.visible = false;
+			        }
+
+			    }
+
+                // if mesh already exists remove it and redraw
+			    if (activeMeshes.indexOf(name) >= 0) {
+			        console.log("mesh updated");
+			        var guid = scene.getObjectByName(name);
+			        scene.remove(guid);
+			    }
+
+                // new mesh
+			    else {
+			        console.log("new mesh add");
+			        console.log(name);
+			        activeMeshes.push(name);
+			    }
+
+                // construct mesh from render package
+			    var vertices = meshData.vertices;
+			    var faces = meshData.faceIndices;
+
+			    var geometry = new THREE.Geometry();
+			    geometry.vertices = [];
+			    geometry.faces = [];
+
+			    for (var i = 0; i < vertices.length; i += 3) {
+			        geometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i + 1], vertices[i + 2]));
+			    }
+
+			    for (var i = 0; i < faces.length; i += 3) {
+			        geometry.faces.push(new THREE.Face3(faces[i], faces[i + 1], faces[i + 2]));
+			    }
+    
+                // Required for smooth shading (why do we store dupe vertices for each tri???)
+			    //geometry.mergeVertices();
+			    //geometry.computeVertexNormals();
+			    geometry.computeFaceNormals();
+
+			    var currentMaterial = defaultShadedMaterial;
+			    if (meshes[0]) {
+			        currentMaterial = meshes[0].material;
+			    }
+
+			    var mesh = new THREE.Mesh(geometry, currentMaterial);
+
+			    mesh.name = meshData.name;
+
+			    meshes.push(mesh);
+
+			    if (meshData.displayPreview == true) {
+			        //var meshObject = scene.getObjectByName(name);
+			        //meshObject.visible = false;
+			        scene.add(mesh);
+			    }
+			}
+
+            // Hot keys
+			function onDocumentKeyDown(event) {
+			    var keyCode = event.which;
+			    // O = ortho
+			    if (keyCode == 79) {
+			        // set ortho cam
+			        oCam.position.set(pCam.position);
+			        camera = oCam;
+			    }
+			        // P = perspective
+			    else if (keyCode == 80) {
+			        // set perspective cam
+			        pCam.position.set(oCam.position);
+			        camera = pCam;
+			    }
+			        // S = shader active
+			    else if (keyCode == 83) {
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].material = defaultShadedMaterial
+			        }
+			    }
+			        // W = wireframe active
+			    else if (keyCode == 87) {
+			        for (var i = 0; i < meshes.length; i++) {
+                        meshes[i].material = defaultWireFrameMaterial
+			        }
+			    }
+			        // R = toggle rotation
+			    else if (keyCode == 82) {
+			        if (rotation == false)
+			        {
+			            rotation = true;
+			        }
+			        else if (rotation == true)
+			        {
+			            rotation = false;
+			        }
+			    }
+			        // 1 = Pink
+			    else if (keyCode == 49) {
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].material.color.setHex(0x00ff00);
+			        }
+			    }
+			        // 2 = Green
+			    else if (keyCode == 50) {
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].material.color.setHex(0xff00ff);
+			        }
+			    }
+			}
+		</script>
+	</body>
+</html>
