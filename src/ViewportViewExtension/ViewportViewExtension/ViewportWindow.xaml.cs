@@ -8,9 +8,6 @@ using System.IO;
 
 namespace ViewportViewExtension
 {
-    /// <summary>
-    /// Interaction logic for RechargeWindow.xaml
-    /// </summary>
     public partial class ViewportWindow : Window
     {
         public ViewportWindow()
@@ -41,7 +38,7 @@ namespace ViewportViewExtension
                 JavascriptResponse response = await Browser.EvaluateScriptAsync(ScriptTextBox.Text);
             }
 
-            // TODO implement history viewer or active html viewer
+            // TODO - view history and active geometry
             ScriptTextBox.Clear();
         }
     }
