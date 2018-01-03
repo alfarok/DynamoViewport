@@ -79,9 +79,6 @@
 
 				let ambientLight = new THREE.AmbientLight(0x404040);
 				scene.add(ambientLight);
-
-				//var directionalLight = new THREE.DirectionalLight( 0xffffff );
-				//directionalLight.position.set( 1, 1, 1 ).normalize();
 			   
 				var pointLight = new THREE.PointLight(0xffffff, 1);
 				camera.add(pointLight);
@@ -90,8 +87,6 @@
 				defaultShadedMaterial = new THREE.MeshLambertMaterial({
 				    color: 0xbbbbbb, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
 				});
-
-				defaultShadedMaterial.flatShading = false;
 
 			    // Default wireframe materal
 				defaultWireFrameMaterial = new THREE.MeshBasicMaterial({
@@ -139,7 +134,7 @@
 				//
 
 				window.addEventListener('resize', onWindowResize, false);
-				window.addEventListener('mousemove', onMouseMove, false);
+				//window.addEventListener('mousemove', onMouseMove, false);
 				window.requestAnimationFrame(render);
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 			}
@@ -174,6 +169,8 @@
 			        }
 			    }
 
+			    /*
+                // Highlight selected geometry
 			    // update the picking ray with the camera and mouse position
 				raycaster.setFromCamera(mouse, camera);
 
@@ -192,10 +189,12 @@
 				    if (INTERSECTED) INTERSECTED.material.color.setHex(0xbbbbbb);
 				    INTERSECTED = null;
 				}
+                */
 
 				renderer.render( scene, camera );
 			}
 
+            /*
 			function onMouseMove(event) {
 
 			    // calculate mouse position in normalized device coordinates
@@ -205,8 +204,9 @@
 			    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
 			}
+            */
 
-            // Helper function to build THREE mesh from json
+            // Helper function to build THREE mesh from render package json
 			function renderDynamoMesh(meshData) {
 
 			    var name = meshData.name;
@@ -214,28 +214,29 @@
 
 			    if (status == "remove") {
 			        console.log("mesh remove");
-			        var guid = scene.getObjectByName(name);
-			        scene.remove(guid);
+			        var mesh = scene.getObjectByName(name);
+			        scene.remove(mesh);
 			        activeMeshes.pop(name);
 			        return;
 			    }
 			    else if (status == "togglePreview") {
 			        console.log("hide/show event");
-			        var guid = scene.getObjectByName(name);
+			        var mesh = scene.getObjectByName(name);
 			        if (meshData.displayPreview == true) {
-			            guid.visible = true;
+			            mesh.visible = true;
 			        }
 			        else {
-			            guid.visible = false;
+			            mesh.visible = false;
 			        }
 
 			    }
 
+                // TODO Dynamic mesh - should update verts not remove
                 // if mesh already exists remove it and redraw
 			    if (activeMeshes.indexOf(name) >= 0) {
 			        console.log("mesh updated");
-			        var guid = scene.getObjectByName(name);
-			        scene.remove(guid);
+			        var mesh = scene.getObjectByName(name);
+			        scene.remove(mesh);
 			    }
 
                 // new mesh
@@ -278,14 +279,14 @@
 			    meshes.push(mesh);
 
 			    if (meshData.displayPreview == true) {
-			        //var meshObject = scene.getObjectByName(name);
-			        //meshObject.visible = false;
 			        scene.add(mesh);
 			    }
 			}
 
-            // Hot keys
+            // Hot keys (some are temp for debugging)
 			function onDocumentKeyDown(event) {
+
+                // TODO toggling cameras is broken
 			    var keyCode = event.which;
 			    // O = ortho
 			    if (keyCode == 79) {

@@ -20,7 +20,8 @@ namespace ViewportViewExtension
 
         // Variable for storing a reference to our loaded parameters
         private ReadyParams readyParams;
-
+        
+        // TODO get/set
         public RenderPackageCache packageContent;
         public string transactionType = "";
         public string nodeGuid = "";
