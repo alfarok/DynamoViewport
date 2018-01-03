@@ -1,4 +1,4 @@
 # DynamoViewport
 A simple view extension for visualizing Dynamo geometry.
 
-Build Instructions:
+This is a WIP repo still in early conceptual development.
