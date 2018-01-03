@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ViewportViewExtension
 {
-    class ViewportWindowViewModel : NotificationObject, IDisposable
+   public class ViewportWindowViewModel : NotificationObject, IDisposable
     {
         private string selectedNodesText = "Begin selecting ";
 
@@ -28,11 +28,11 @@ namespace ViewportViewExtension
         public bool displayPreview = true;
 
         // Find render nodes and build THREE meshes
-        public string SelectedNodesText => $"{getNodeTypes()}";
+        public string RenderData => $"{getRenderPackages()}";
 
-        public string getNodeTypes()
+        public string getRenderPackages()
         {
-
+            // javascript function
             string output = "renderDynamoMesh(";
 
             // TODO don't convert enums to lists
@@ -81,13 +81,9 @@ namespace ViewportViewExtension
         {
             // Update viewport when nodes render package is updated
             node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
-
-            // TODO
-            // Event that is raised when preview is toggle should be subscribed to here
-            // When event is triggered we need to show/hide mesh with matching node name from scene
+            
+            // Listen for property changes on added node ex: toggle background preview
             node.PropertyChanged += CurrentWorkspaceModel_nodePropertyChanged;
-
-            //RaisePropertyChanged("SelectedNodesText");
         }
 
         // When an existing node is removed from the workspace
@@ -96,7 +92,7 @@ namespace ViewportViewExtension
             nodeGuid = node.GUID.ToString();
             transactionType = "remove";
             // Unregister when node is removed
-            RaisePropertyChanged("SelectedNodesText");
+            RaisePropertyChanged("RenderData");
             node.RenderPackagesUpdated -= CurrentWorkspaceModel_UpdateViewportGeometry;
         }
 
@@ -106,7 +102,7 @@ namespace ViewportViewExtension
             displayPreview = nodeModel.ShouldDisplayPreview;
             nodeGuid = nodeModel.GUID.ToString();
             transactionType = "update";
-            RaisePropertyChanged("SelectedNodesText");
+            RaisePropertyChanged("RenderData");
         }
 
         private void CurrentWorkspaceModel_nodePropertyChanged(object sender, EventArgs e)
@@ -120,7 +116,7 @@ namespace ViewportViewExtension
                 transactionType = "togglePreview";
                 nodeGuid = node.GUID.ToString();
                 displayPreview = node.IsVisible;
-                RaisePropertyChanged("SelectedNodesText");
+                RaisePropertyChanged("RenderData");
             }
         }
 

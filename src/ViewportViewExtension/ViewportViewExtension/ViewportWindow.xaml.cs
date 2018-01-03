@@ -10,7 +10,7 @@ namespace ViewportViewExtension
 {
     public partial class ViewportWindow : Window
     {
-        public ViewportWindow()
+        public ViewportWindow( ViewportWindowViewModel vm )
         {
             if (!Cef.IsInitialized)
             {
@@ -27,10 +27,28 @@ namespace ViewportViewExtension
 
             InitializeComponent();
 
+            // when view model is updated call javascript update function
+            if (vm == null) return;
+            // TODO create new event - don't use PropertyChanged
+            vm.PropertyChanged += ExecuteJavascript;
+
             // Center initial viewport window upon launch
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
         }
 
+        // Update geometry when view model new changes
+        private async void ExecuteJavascript(object sender, EventArgs e)
+        {
+            ViewportWindowViewModel vm = sender as ViewportWindowViewModel;
+            string jsonString = vm.RenderData;
+
+            if (!string.IsNullOrWhiteSpace(jsonString))
+            {
+                JavascriptResponse response = await Browser.EvaluateScriptAsync(jsonString);
+            }
+        }
+
+        // Command line execution
         private async void ExecuteJavaScriptBtn_Click(object sender, RoutedEventArgs e)
         {
             if (/*Browser.CanExecuteJavascriptInMainFrame &&*/ !string.IsNullOrWhiteSpace(ScriptTextBox.Text))

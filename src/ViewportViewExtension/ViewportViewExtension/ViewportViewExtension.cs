@@ -33,7 +33,7 @@ namespace ViewportViewExtension
             {
                 // Instantiate a viewModel and window
                 var viewModel = new ViewportWindowViewModel(p);
-                var window = new ViewportWindow
+                var window = new ViewportWindow(viewModel)
                 {
                     // Set the data context for the main grid in the window
                     // This refers to the main grid also seen in our xaml file
