@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using CefSharp;
 using CefSharp.Wpf;
 using System.Windows.Controls;
@@ -34,6 +35,21 @@ namespace ViewportViewExtension
 
             // Center initial viewport window upon launch
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+
+            ScriptTextBox.KeyDown += new KeyEventHandler(textBoxKeyDown);
+        }
+
+        private async void textBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (!string.IsNullOrWhiteSpace(ScriptTextBox.Text))
+                {
+                    JavascriptResponse response = await Browser.EvaluateScriptAsync(ScriptTextBox.Text);
+                }
+
+                ScriptTextBox.Clear();
+            }
         }
 
         // Update geometry when view model new changes

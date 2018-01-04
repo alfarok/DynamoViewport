@@ -111,10 +111,12 @@
 
 				}
 
-				var gridLines = new THREE.Line( gridHelper, lineMaterial, THREE.LinePieces );
+				var gridLines = new THREE.Line(gridHelper, lineMaterial, THREE.LinePieces);
+				gridLines.name = "grid";
 				scene.add( gridLines );
 
 				var axisHelper = new THREE.AxisHelper(100);
+				axisHelper.name = "axis";
 				axisHelper.translateY(.05);
 				scene.add(axisHelper);
 
@@ -333,6 +335,26 @@
 			    else if (keyCode == 50) {
 			        for (var i = 0; i < meshes.length; i++) {
 			            meshes[i].material.color.setHex(0xff00ff);
+			        }
+			    }
+			        // G = toggle grid
+			    else if (keyCode == 71) {
+			        var grid = scene.getObjectByName("grid");
+			        if (grid.visible == true) {
+			            grid.visible = false;
+			        }
+			        else {
+			            grid.visible = true;
+			        }
+			    }
+			        // A = toggle axis
+			    else if (keyCode == 65) {
+			        var axis = scene.getObjectByName("axis");
+			        if (axis.visible == true) {
+			            axis.visible = false;
+			        }
+			        else {
+			            axis.visible = true;
 			        }
 			    }
 			}
