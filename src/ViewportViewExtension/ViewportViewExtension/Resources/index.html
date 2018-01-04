@@ -42,12 +42,8 @@
 
 			var camera, scene, renderer, controls;
 
-			var pCam, oCam;
-
 			var defaultShadedMaterial;
 			var defaultWireFrameMaterial;
-
-			//var mesh;
 
 			var meshes = [];
 
@@ -68,10 +64,7 @@
 				container = document.getElementById( 'container' );
 
 				var aspect = window.innerWidth / window.innerHeight;
-				var frustumSize = 1000;
-				pCam = new THREE.PerspectiveCamera(45, aspect, 1, 10000);
-				oCam = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, 2000);
-				camera = pCam;
+				camera = new THREE.PerspectiveCamera(45, aspect, 1, 10000);
 
 				scene = new THREE.Scene();
 				//scene.fog = new THREE.Fog(0x050505, 2000, 3500);
@@ -93,32 +86,7 @@
 				    color: 0xbbbbbb, wireframe: true
 				});
 
-                // TODO break out into separate func
-				// Build Grid and Axis
-				var size = 100;
-				var step = 5;
-				
-				var gridHelper = new THREE.Geometry();
-				var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.4 } );
-
-				for ( var i = - size; i <= size; i += step ) {
-
-					gridHelper.vertices.push( new THREE.Vector3( - size, 0, i ) );
-					gridHelper.vertices.push( new THREE.Vector3(   size, 0, i ) );
-
-					gridHelper.vertices.push( new THREE.Vector3( i, 0, - size ) );
-					gridHelper.vertices.push( new THREE.Vector3( i, 0,   size ) );
-
-				}
-
-				var gridLines = new THREE.Line(gridHelper, lineMaterial, THREE.LinePieces);
-				gridLines.name = "grid";
-				scene.add( gridLines );
-
-				var axisHelper = new THREE.AxisHelper(100);
-				axisHelper.name = "axis";
-				axisHelper.translateY(.05);
-				scene.add(axisHelper);
+				buildSceneHelpers();
 
 				controls = new THREE.OrbitControls( camera );
 				camera.position.set( 0, 20, 100 );
@@ -156,6 +124,8 @@
 				requestAnimationFrame( animate );
 
 				controls.update();
+
+				//move();
 
 				render();
 			}
@@ -208,6 +178,33 @@
 			}
             */
 
+			function buildSceneHelpers() {
+			    var size = 100;
+			    var step = 5;
+
+			    var gridHelper = new THREE.Geometry();
+			    var lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 });
+
+			    for (var i = -size; i <= size; i += step) {
+
+			        gridHelper.vertices.push(new THREE.Vector3(-size, 0, i));
+			        gridHelper.vertices.push(new THREE.Vector3(size, 0, i));
+
+			        gridHelper.vertices.push(new THREE.Vector3(i, 0, -size));
+			        gridHelper.vertices.push(new THREE.Vector3(i, 0, size));
+
+			    }
+
+			    var gridLines = new THREE.Line(gridHelper, lineMaterial, THREE.LinePieces);
+			    gridLines.name = "grid";
+			    scene.add(gridLines);
+
+			    var axisHelper = new THREE.AxisHelper(100);
+			    axisHelper.name = "axis";
+			    axisHelper.translateY(.05);
+			    scene.add(axisHelper);
+			}
+
             // Helper function to build THREE mesh from render package json
 			function renderDynamoMesh(meshData) {
 
@@ -215,14 +212,14 @@
 			    var status = meshData.transactionType;
 
 			    if (status == "remove") {
-			        console.log("mesh remove");
+			        console.log("existing object removed");
 			        var mesh = scene.getObjectByName(name);
 			        scene.remove(mesh);
 			        activeMeshes.pop(name);
 			        return;
 			    }
 			    else if (status == "togglePreview") {
-			        console.log("hide/show event");
+			        console.log("hide/show object");
 			        var mesh = scene.getObjectByName(name);
 			        if (meshData.displayPreview == true) {
 			            mesh.visible = true;
@@ -236,54 +233,120 @@
                 // TODO Dynamic mesh - should update verts not remove
                 // if mesh already exists remove it and redraw
 			    if (activeMeshes.indexOf(name) >= 0) {
-			        console.log("mesh updated");
+			        console.log("object updated");
 			        var mesh = scene.getObjectByName(name);
 			        scene.remove(mesh);
 			    }
 
                 // new mesh
 			    else {
-			        console.log("new mesh add");
+			        console.log("new object add");
 			        console.log(name);
 			        activeMeshes.push(name);
 			    }
 
+                
                 // construct mesh from render package
 			    var vertices = meshData.vertices;
 			    var faces = meshData.faceIndices;
 
-			    var geometry = new THREE.Geometry();
-			    geometry.vertices = [];
-			    geometry.faces = [];
+			    if (vertices.length > 0 && faces.length > 0)
+			    {
+			        var geometry = new THREE.Geometry();
+			        geometry.vertices = [];
+			        geometry.faces = [];
 
-			    for (var i = 0; i < vertices.length; i += 3) {
-			        geometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i + 1], vertices[i + 2]));
-			    }
+			        for (var i = 0; i < vertices.length; i += 3) {
+			            geometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i + 1], vertices[i + 2]));
+			        }
 
-			    for (var i = 0; i < faces.length; i += 3) {
-			        geometry.faces.push(new THREE.Face3(faces[i], faces[i + 1], faces[i + 2]));
-			    }
+			        for (var i = 0; i < faces.length; i += 3) {
+			            geometry.faces.push(new THREE.Face3(faces[i], faces[i + 1], faces[i + 2]));
+			        }
     
-                // Required for smooth shading (why do we store dupe vertices for each tri???)
-			    //geometry.mergeVertices();
-			    //geometry.computeVertexNormals();
-			    geometry.computeFaceNormals();
+			        // Required for smooth shading (why do we store dupe vertices for each tri???)
+			        //geometry.mergeVertices();
+			        //geometry.computeVertexNormals();
+			        geometry.computeFaceNormals();
 
-			    var currentMaterial = defaultShadedMaterial;
-			    if (meshes[0]) {
-			        currentMaterial = meshes[0].material;
+			        var currentMaterial = defaultShadedMaterial;
+
+			        /*
+			        if (meshes[0]) {
+			            currentMaterial = meshes[0].material;
+			        }
+                    */
+
+			        var mesh = new THREE.Mesh(geometry, currentMaterial);
+
+			        mesh.name = meshData.name;
+
+			        meshes.push(mesh);
+
+			        if (meshData.displayPreview) {
+			            scene.add(mesh);
+			        }
+			    }
+                
+                // TODO remove point lines?
+			    // construct lines from render package
+			    var lines = meshData.lines;
+
+			    if (lines.length > 0)
+			    {
+			        var lineMaterial = new THREE.LineBasicMaterial({
+			            color: 0xffffff,
+			            linewidth: 10
+			        });
+
+			        var lineGeometry = new THREE.Geometry();
+			        lineGeometry.vertices = [];
+
+			        for (var i=0; i < lines.length; i += 3) {
+			            lineGeometry.vertices.push(new THREE.Vector3(lines[i], lines[i + 1], lines[i + 2]));
+			        }
+
+			        var line = new THREE.Line(lineGeometry, lineMaterial);
+			        line.name = name;
+			        meshes.push(line);
+
+			        if (meshData.displayPreview) {
+			            scene.add(line);
+			        }
 			    }
 
-			    var mesh = new THREE.Mesh(geometry, currentMaterial);
+			    // construct points from render package
+			    var points = meshData.points;
 
-			    mesh.name = meshData.name;
+			    if (points.length > 0) {
 
-			    meshes.push(mesh);
+			        var pointMaterial = new THREE.PointsMaterial({ color: 0x009eff, size: 5, sizeAttenuation: false, side: THREE.DoubleSide });
+			        var pointGeometry = new THREE.Geometry();
+			        pointGeometry.vertices = [];
 
-			    if (meshData.displayPreview == true) {
-			        scene.add(mesh);
+			        for (var i = 0; i < points.length; i += 3) {
+			            pointGeometry.vertices.push(new THREE.Vector3(points[i], points[i + 1], points[i + 2]));
+			        }
+
+			        var pointCloud = new THREE.Points(pointGeometry, pointMaterial);
+			        pointCloud.name = name;
+			        meshes.push(pointCloud);
+
+			        if (meshData.displayPreview) {
+			            scene.add(pointCloud);
+			        }
 			    }
 			}
+
+            /*
+			function move(name, direction, speed) {
+			    var mesh = scene.getObjectByName(name);
+			    var vector = direction.clone().multiplyScalar(speed, speed, speed);
+			    mesh.position.x += vector.x;
+			    mesh.position.y += vector.y;
+			    mesh.position.z += vector.z;
+			}
+            */
 
             // Hot keys (some are temp for debugging)
 			function onDocumentKeyDown(event) {

@@ -38,21 +38,36 @@ namespace ViewportViewExtension
             // TODO don't convert enums to lists
             List<double> verts = new List<double>();
             List<int> indices = new List<int>();
-            List<double> norms = new List<double>();
+
+            List<double> points = new List<double>();
+            List<int> pointIndices = new List<int>();
+
+            List<double> lines = new List<double>();
+            List<int> lineIndices = new List<int>();
 
             foreach (IRenderPackage p in packageContent.Packages)
             {
                 verts = p.MeshVertices.ToList();
                 indices = p.MeshIndices.ToList();
-                norms = p.MeshNormals.ToList();
+
+                points = p.PointVertices.ToList();
+                pointIndices = p.PointIndices.ToList();
+
+                lines = p.LineStripVertices.ToList();
+                lineIndices = p.LineStripIndices.ToList();
+
             }
 
             JObject meshObject = new JObject(
                 new JProperty("name", nodeGuid),
                 new JProperty("transactionType", transactionType),
                 new JProperty("displayPreview", displayPreview),
+
                 new JProperty("vertices", verts),
-                new JProperty("faceIndices", indices));
+                new JProperty("faceIndices", indices),
+                new JProperty("points", points),
+                new JProperty("lines", lines)
+                );
 
             string jsonString = meshObject.ToString();
 
@@ -72,7 +87,7 @@ namespace ViewportViewExtension
             p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodeRemoved;
 
             // TODO this could be dangerous if called in custom node ws
-            var currentWS = p.CurrentWorkspaceModel as HomeWorkspaceModel;
+            HomeWorkspaceModel currentWS = readyParams.CurrentWorkspaceModel as HomeWorkspaceModel;
             //currentWS.RefreshCompleted += CurrentWorkspaceModel_NodesChanged;
         }
 
