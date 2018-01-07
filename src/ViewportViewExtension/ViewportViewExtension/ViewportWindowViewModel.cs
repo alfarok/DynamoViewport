@@ -10,6 +10,7 @@ using Dynamo.Graph.Workspaces;
 using Dynamo.Models;
 using Dynamo.Visualization;
 using CefSharp;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ViewportViewExtension
@@ -35,41 +36,30 @@ namespace ViewportViewExtension
             // javascript function
             string output = "renderDynamoMesh(";
 
-            // TODO don't convert enums to lists
-            List<double> verts = new List<double>();
-            List<int> indices = new List<int>();
-
-            List<double> points = new List<double>();
-            List<int> pointIndices = new List<int>();
-
-            List<double> lines = new List<double>();
-            List<int> lineIndices = new List<int>();
+            // TODO don't convert enums to lists?
+            List<List<double>> verts = new List<List<double>>();
+            List<List<int>> vertIndices = new List<List<int>>();
+            List<List<double>> points = new List<List<double>>();
+            List<List<double>> lines = new List<List<double>>();
 
             foreach (IRenderPackage p in packageContent.Packages)
             {
-                verts = p.MeshVertices.ToList();
-                indices = p.MeshIndices.ToList();
-
-                points = p.PointVertices.ToList();
-                pointIndices = p.PointIndices.ToList();
-
-                lines = p.LineStripVertices.ToList();
-                lineIndices = p.LineStripIndices.ToList();
-
+                verts.Add(p.MeshVertices.ToList());
+                vertIndices.Add(p.MeshIndices.ToList());
+                points.Add(p.PointVertices.ToList());
+                lines.Add(p.LineStripVertices.ToList());
             }
 
-            JObject meshObject = new JObject(
-                new JProperty("name", nodeGuid),
-                new JProperty("transactionType", transactionType),
-                new JProperty("displayPreview", displayPreview),
+            Dictionary<string, Object> groupData = new Dictionary<string, object>();
+            groupData.Add("name", nodeGuid);
+            groupData.Add("transactionType", transactionType);
+            groupData.Add("displayPreview", displayPreview);
+            groupData.Add("vertices", verts);
+            groupData.Add("faceIndices", vertIndices);
+            groupData.Add("points", points);
+            groupData.Add("lines", lines);
 
-                new JProperty("vertices", verts),
-                new JProperty("faceIndices", indices),
-                new JProperty("points", points),
-                new JProperty("lines", lines)
-                );
-
-            string jsonString = meshObject.ToString();
+            string jsonString = JsonConvert.SerializeObject(groupData/*, Formatting.Indented*/);
 
             output += jsonString + ");";
 

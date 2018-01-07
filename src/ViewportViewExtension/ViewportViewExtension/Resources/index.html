@@ -45,16 +45,15 @@
 			var defaultShadedMaterial;
 			var defaultWireFrameMaterial;
 
-			var meshes = [];
-
-			var activeMeshes = [];
+			var nodeGeomGroups = [];
+			var activeNodes = [];
 
 			var rotation = false;
 
-			var raycaster = new THREE.Raycaster();
-			var mouse = new THREE.Vector2(), INTERSECTED;
-
 			var colorHistory;
+
+			//var raycaster = new THREE.Raycaster();
+			//var mouse = new THREE.Vector2(), INTERSECTED;
 
 			init();
 			animate();
@@ -81,7 +80,7 @@
 				    color: 0xbbbbbb, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
 				});
 
-			    // Default wireframe materal
+			    // Default wireframe material
 				defaultWireFrameMaterial = new THREE.MeshBasicMaterial({
 				    color: 0xbbbbbb, wireframe: true
 				});
@@ -134,10 +133,17 @@
 
 				//var time = Date.now() * 0.001;
 
+                // sample for updating the render loop (press 'R' to toggle mesh rotation)
 			    if (rotation == true) {
-			        for (var i = 0; i < meshes.length; i++) {
-			            meshes[i].rotation.x += 0.005;
-			            meshes[i].rotation.y += 0.005;
+			        for (var i = 0; i < nodeGeomGroups.length; i++) {
+			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
+			                if (nodeGeomGroups[i].children[j].type == "Mesh" ||
+                                nodeGeomGroups[i].children[j].type == "Line" ||
+                                nodeGeomGroups[i].children[j].type == "Point") {
+			                        nodeGeomGroups[i].children[j].rotation.x += 0.005;
+			                        nodeGeomGroups[i].children[j].rotation.y += 0.005;
+			                }
+			            }
 			        }
 			    }
 
@@ -205,137 +211,150 @@
 			    scene.add(axisHelper);
 			}
 
-            // Helper function to build THREE mesh from render package json
-			function renderDynamoMesh(meshData) {
+            // TODO this needs serious cleanup
+            // Helper function to build THREE objects from render package json
+			function renderDynamoMesh(groupData) {
 
-			    var name = meshData.name;
-			    var status = meshData.transactionType;
+			    var name = groupData.name;
+			    var status = groupData.transactionType;
 
 			    if (status == "remove") {
 			        console.log("existing object removed");
-			        var mesh = scene.getObjectByName(name);
-			        scene.remove(mesh);
-			        activeMeshes.pop(name);
+                    // need to get ALL objects with this name
+			        var group = scene.getObjectByName(name);
+			        scene.remove(group);
+			        nodeGeomGroups.pop(group);
+			        activeNodes.pop(name);
 			        return;
 			    }
 			    else if (status == "togglePreview") {
-			        console.log("hide/show object");
-			        var mesh = scene.getObjectByName(name);
-			        if (meshData.displayPreview == true) {
-			            mesh.visible = true;
+			        console.log("hide/show object preview");
+			        var group = scene.getObjectByName(name);
+			        if (groupData.displayPreview == true) {
+			            group.visible = true;
 			        }
 			        else {
-			            mesh.visible = false;
+			            group.visible = false;
 			        }
-
+                    //return;
 			    }
 
                 // TODO Dynamic mesh - should update verts not remove
-                // if mesh already exists remove it and redraw
-			    if (activeMeshes.indexOf(name) >= 0) {
-			        console.log("object updated");
-			        var mesh = scene.getObjectByName(name);
-			        scene.remove(mesh);
+                // if object already exists remove it and redraw
+			    if (activeNodes.indexOf(name) >= 0) {
+			        console.log("existing object updated");
+			        var group = scene.getObjectByName(name);
+			        scene.remove(group);
+			        nodeGeomGroups.pop(group);
 			    }
 
-                // new mesh
+                // new object
 			    else {
-			        console.log("new object add");
+			        console.log("new object added");
 			        console.log(name);
-			        activeMeshes.push(name);
+			        activeNodes.push(name);
 			    }
 
+			    // Groups make working with sets of objects syntactically clearer
+                // but are almost indentical to a traditional object.
+			    // Here each group contains all the geometry for a single active node.
+			    var nodeGeomGroup = new THREE.Group();
+			    nodeGeomGroup.name = name;
                 
-                // construct mesh from render package
-			    var vertices = meshData.vertices;
-			    var faces = meshData.faceIndices;
+			    // MESHES from render package
+                // lists (each mesh) of lists (each meshes vertices/faces)
+			    var vertices = groupData.vertices;
+			    var faces = groupData.faceIndices;
 
+                // verify groupData contains mesh objects
 			    if (vertices.length > 0 && faces.length > 0)
 			    {
-			        var geometry = new THREE.Geometry();
-			        geometry.vertices = [];
-			        geometry.faces = [];
+                    // for each mesh construct meshObject and add to group
+			        for (var i = 0; i < vertices.length; i++)
+			        {
+			            var geometry = new THREE.Geometry();
+			            geometry.vertices = [];
+			            geometry.faces = [];
 
-			        for (var i = 0; i < vertices.length; i += 3) {
-			            geometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i + 1], vertices[i + 2]));
-			        }
+			            for (var j = 0; j < vertices[i].length; j += 3) {
+			                geometry.vertices.push(new THREE.Vector3(vertices[i][j], vertices[i][j + 1], vertices[i][j + 2]));
 
-			        for (var i = 0; i < faces.length; i += 3) {
-			            geometry.faces.push(new THREE.Face3(faces[i], faces[i + 1], faces[i + 2]));
-			        }
-    
-			        // Required for smooth shading (why do we store dupe vertices for each tri???)
-			        //geometry.mergeVertices();
-			        //geometry.computeVertexNormals();
-			        geometry.computeFaceNormals();
+			            }
 
-			        var currentMaterial = defaultShadedMaterial;
+			            for (var j = 0; j < faces[i].length; j += 3) {
+			                geometry.faces.push(new THREE.Face3(faces[i][j], faces[i][j + 1], faces[i][j + 2]));
+			            }
 
-			        /*
-			        if (meshes[0]) {
-			            currentMaterial = meshes[0].material;
-			        }
-                    */
+			            // Required for smooth shading (why do we store dupe vertices for each tri???)
+			            //geometry.mergeVertices();
+			            //geometry.computeVertexNormals();
+			            geometry.computeFaceNormals();
 
-			        var mesh = new THREE.Mesh(geometry, currentMaterial);
-
-			        mesh.name = meshData.name;
-
-			        meshes.push(mesh);
-
-			        if (meshData.displayPreview) {
-			            scene.add(mesh);
-			        }
+			            var mesh = new THREE.Mesh(geometry, defaultShadedMaterial);
+			            mesh.name = name;
+			            nodeGeomGroup.add(mesh);
+			        }     
 			    }
                 
-                // TODO remove point lines?
-			    // construct lines from render package
-			    var lines = meshData.lines;
+                // TODO why do small L-shaped lines initially render for points?
+			    // LINES from render package
+			    var lines = groupData.lines;
 
+			    // verify groupData contains line objects
 			    if (lines.length > 0)
 			    {
 			        var lineMaterial = new THREE.LineBasicMaterial({
 			            color: 0xffffff,
-			            linewidth: 10
+			            linewidth: 10 // doesn't do anything - known issue
 			        });
 
-			        var lineGeometry = new THREE.Geometry();
-			        lineGeometry.vertices = [];
+			        // for each line construct lineObject and add to group
+			        for (var i = 0; i < lines.length; i++) {
+			            var lineGeometry = new THREE.Geometry();
+			            lineGeometry.vertices = [];
 
-			        for (var i=0; i < lines.length; i += 3) {
-			            lineGeometry.vertices.push(new THREE.Vector3(lines[i], lines[i + 1], lines[i + 2]));
-			        }
+			            for (var j = 0; j < lines[i].length; j += 3) {
+			                lineGeometry.vertices.push(new THREE.Vector3(lines[i][j], lines[i][j + 1], lines[i][j + 2]));
+			            }
 
-			        var line = new THREE.Line(lineGeometry, lineMaterial);
-			        line.name = name;
-			        meshes.push(line);
-
-			        if (meshData.displayPreview) {
-			            scene.add(line);
+			            var line = new THREE.Line(lineGeometry, lineMaterial);
+			            line.name = name;
+			            nodeGeomGroup.add(line);
 			        }
 			    }
 
-			    // construct points from render package
-			    var points = meshData.points;
+			    // Points from render package
+			    var points = groupData.points;
 
+			    // verify groupData contains line objects
 			    if (points.length > 0) {
 
 			        var pointMaterial = new THREE.PointsMaterial({ color: 0x009eff, size: 5, sizeAttenuation: false, side: THREE.DoubleSide });
-			        var pointGeometry = new THREE.Geometry();
-			        pointGeometry.vertices = [];
 
-			        for (var i = 0; i < points.length; i += 3) {
-			            pointGeometry.vertices.push(new THREE.Vector3(points[i], points[i + 1], points[i + 2]));
-			        }
+			        // for each point set construct pointObject and add to group
+			        for (var i = 0; i < points.length; i++) {
+			            var pointGeometry = new THREE.Geometry();
+			            pointGeometry.vertices = [];
 
-			        var pointCloud = new THREE.Points(pointGeometry, pointMaterial);
-			        pointCloud.name = name;
-			        meshes.push(pointCloud);
+			            for (var j = 0; j < points[i].length; j += 3) {
+			                pointGeometry.vertices.push(new THREE.Vector3(points[i][j], points[i][j + 1], points[i][j + 2]));
+			            }
 
-			        if (meshData.displayPreview) {
-			            scene.add(pointCloud);
+			            var pointCloud = new THREE.Points(pointGeometry, pointMaterial);
+			            pointCloud.name = name;
+			            nodeGeomGroup.add(pointCloud);
 			        }
 			    }
+
+                // If displayPreview is false set group visible property before adding to scene
+			    if (groupData.displayPreview == false) {
+			        nodeGeomGroup.visible = false;
+			    }
+
+			    nodeGeomGroups.push(nodeGeomGroup);
+			    scene.add(nodeGeomGroup);
+
+			    console.log(scene);
 			}
 
             /*
@@ -367,14 +386,22 @@
 			    }
 			        // S = shader active
 			    else if (keyCode == 83) {
-			        for (var i = 0; i < meshes.length; i++) {
-			            meshes[i].material = defaultShadedMaterial
+			        for (var i = 0; i < nodeGeomGroups.length; i++) {
+			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
+			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
+			                    nodeGeomGroups[i].children[j].material = defaultShadedMaterial;
+			                }
+			            }
 			        }
 			    }
 			        // W = wireframe active
 			    else if (keyCode == 87) {
-			        for (var i = 0; i < meshes.length; i++) {
-                        meshes[i].material = defaultWireFrameMaterial
+			        for (var i = 0; i < nodeGeomGroups.length; i++) {
+			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
+			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
+			                    nodeGeomGroups[i].children[j].material = defaultWireFrameMaterial;
+			                }
+			            }
 			        }
 			    }
 			        // R = toggle rotation
@@ -390,14 +417,22 @@
 			    }
 			        // 1 = Pink
 			    else if (keyCode == 49) {
-			        for (var i = 0; i < meshes.length; i++) {
-			            meshes[i].material.color.setHex(0x00ff00);
+			        for (var i = 0; i < nodeGeomGroups.length; i++) {
+			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
+			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
+			                    nodeGeomGroups[i].children[j].material.color.setHex(0x00ff00);
+			                }
+			            }
 			        }
 			    }
 			        // 2 = Green
 			    else if (keyCode == 50) {
-			        for (var i = 0; i < meshes.length; i++) {
-			            meshes[i].material.color.setHex(0xff00ff);
+			        for (var i = 0; i < nodeGeomGroups.length; i++) {
+			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
+			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
+			                    nodeGeomGroups[i].children[j].material.color.setHex(0xff00ff);
+			                }
+			            }
 			        }
 			    }
 			        // G = toggle grid
