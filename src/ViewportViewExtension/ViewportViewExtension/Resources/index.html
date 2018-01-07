@@ -207,7 +207,8 @@
 
 			    var axisHelper = new THREE.AxisHelper(100);
 			    axisHelper.name = "axis";
-			    axisHelper.translateY(.05);
+			    axisHelper.translateY(.001);
+			    axisHelper.rotateX(-Math.PI / 2);
 			    scene.add(axisHelper);
 			}
 

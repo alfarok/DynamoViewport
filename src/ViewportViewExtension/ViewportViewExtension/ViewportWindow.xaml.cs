@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using CefSharp;
@@ -28,9 +29,8 @@ namespace ViewportViewExtension
 
             InitializeComponent();
 
-            // when view model is updated call javascript update function
+            // When view model is updated call javascript update function
             if (vm == null) return;
-            // TODO create new event - don't use PropertyChanged
             vm.PropertyChanged += ExecuteJavascript;
 
             // Center initial viewport window upon launch
@@ -38,7 +38,8 @@ namespace ViewportViewExtension
 
             ScriptTextBox.KeyDown += new KeyEventHandler(textBoxKeyDown);
         }
-
+        
+        // Enter to execute command line
         private async void textBoxKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -55,12 +56,19 @@ namespace ViewportViewExtension
         // Update geometry when view model new changes
         private async void ExecuteJavascript(object sender, EventArgs e)
         {
-            ViewportWindowViewModel vm = sender as ViewportWindowViewModel;
-            string jsonString = vm.RenderData;
+            //check what property is How often is this being triggered?
+            PropertyChangedEventArgs eventArgs = e as PropertyChangedEventArgs;
+            string changedProperty = eventArgs.PropertyName;
 
-            if (!string.IsNullOrWhiteSpace(jsonString))
+            if (changedProperty == "RenderData")
             {
-                JavascriptResponse response = await Browser.EvaluateScriptAsync(jsonString);
+                ViewportWindowViewModel vm = sender as ViewportWindowViewModel;
+                string jsonString = vm.RenderData;
+
+                if (!string.IsNullOrWhiteSpace(jsonString))
+                {
+                    JavascriptResponse response = await Browser.EvaluateScriptAsync(jsonString);
+                }
             }
         }
 
