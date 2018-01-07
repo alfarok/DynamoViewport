@@ -22,14 +22,13 @@ namespace ViewportViewExtension
         // Variable for storing a reference to our loaded parameters
         private ReadyParams readyParams;
         
-        // TODO get/set
-        public RenderPackageCache packageContent;
-        public string transactionType = "";
-        public string nodeGuid = "";
-        public bool displayPreview = true;
+        public RenderPackageCache PackageContent { get; set; }
+        public string TransactionType { get; set; }
+        public string NodeGuid { get; set;  }
+        public bool DisplayPreview { get; set; } = true; // C#6.0
 
         // Find render nodes and build THREE meshes
-        public string RenderData => $"{getRenderPackages()}";
+        public string RenderData => $"{getRenderPackages()}"; // C#6.0
 
         public string getRenderPackages()
         {
@@ -42,7 +41,7 @@ namespace ViewportViewExtension
             List<List<double>> points = new List<List<double>>();
             List<List<double>> lines = new List<List<double>>();
 
-            foreach (IRenderPackage p in packageContent.Packages)
+            foreach (IRenderPackage p in PackageContent.Packages)
             {
                 verts.Add(p.MeshVertices.ToList());
                 vertIndices.Add(p.MeshIndices.ToList());
@@ -51,9 +50,9 @@ namespace ViewportViewExtension
             }
 
             Dictionary<string, Object> groupData = new Dictionary<string, object>();
-            groupData.Add("name", nodeGuid);
-            groupData.Add("transactionType", transactionType);
-            groupData.Add("displayPreview", displayPreview);
+            groupData.Add("name", NodeGuid);
+            groupData.Add("transactionType", TransactionType);
+            groupData.Add("displayPreview", DisplayPreview);
             groupData.Add("vertices", verts);
             groupData.Add("faceIndices", vertIndices);
             groupData.Add("points", points);
@@ -94,8 +93,8 @@ namespace ViewportViewExtension
         // When an existing node is removed from the workspace
         private void CurrentWorkspaceModel_NodeRemoved(NodeModel node)
         {
-            nodeGuid = node.GUID.ToString();
-            transactionType = "remove";
+            NodeGuid = node.GUID.ToString();
+            TransactionType = "remove";
             // Unregister when node is removed
             RaisePropertyChanged("RenderData");
             node.RenderPackagesUpdated -= CurrentWorkspaceModel_UpdateViewportGeometry;
@@ -103,10 +102,10 @@ namespace ViewportViewExtension
 
         private void CurrentWorkspaceModel_UpdateViewportGeometry(NodeModel nodeModel, RenderPackageCache packages)
         {
-            packageContent = packages;
-            displayPreview = nodeModel.ShouldDisplayPreview;
-            nodeGuid = nodeModel.GUID.ToString();
-            transactionType = "update";
+            PackageContent = packages;
+            DisplayPreview = nodeModel.ShouldDisplayPreview;
+            NodeGuid = nodeModel.GUID.ToString();
+            TransactionType = "update";
             RaisePropertyChanged("RenderData");
         }
 
@@ -118,9 +117,9 @@ namespace ViewportViewExtension
 
             if(changedProperty == "IsVisible")
             {
-                transactionType = "togglePreview";
-                nodeGuid = node.GUID.ToString();
-                displayPreview = node.IsVisible;
+                TransactionType = "togglePreview";
+                NodeGuid = node.GUID.ToString();
+                DisplayPreview = node.IsVisible;
                 RaisePropertyChanged("RenderData");
             }
         }
