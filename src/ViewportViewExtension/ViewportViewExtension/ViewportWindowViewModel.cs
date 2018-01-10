@@ -36,15 +36,15 @@ namespace ViewportViewExtension
             string output = "renderDynamoMesh(";
 
             // TODO don't convert enums to lists?
-            List<List<double>> verts = new List<List<double>>();
-            List<List<int>> vertIndices = new List<List<int>>();
+            List<double[]> verts = new List<double[]>();
+            //List<List<int>> vertIndices = new List<List<int>>();
             List<List<double>> points = new List<List<double>>();
             List<List<double>> lines = new List<List<double>>();
 
             foreach (IRenderPackage p in PackageContent.Packages)
             {
-                verts.Add(p.MeshVertices.ToList());
-                vertIndices.Add(p.MeshIndices.ToList());
+                verts.Add(p.MeshVertices.ToArray());
+                //vertIndices.Add(p.MeshIndices.ToList());
                 points.Add(p.PointVertices.ToList());
                 lines.Add(p.LineStripVertices.ToList());
             }
@@ -54,7 +54,7 @@ namespace ViewportViewExtension
             groupData.Add("transactionType", TransactionType);
             groupData.Add("displayPreview", DisplayPreview);
             groupData.Add("vertices", verts);
-            groupData.Add("faceIndices", vertIndices);
+            //groupData.Add("faceIndices", vertIndices);
             groupData.Add("points", points);
             groupData.Add("lines", lines);
 

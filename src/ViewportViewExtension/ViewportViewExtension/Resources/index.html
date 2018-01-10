@@ -265,14 +265,15 @@
 			    // MESHES from render package
                 // lists (each mesh) of lists (each meshes vertices/faces)
 			    var vertices = groupData.vertices;
-			    var faces = groupData.faceIndices;
+			    //var faces = groupData.faceIndices;
 
                 // verify groupData contains mesh objects
-			    if (vertices.length > 0 && faces.length > 0)
+			    if (vertices.length > 0 /*&& faces.length > 0*/)
 			    {
-                    // for each mesh construct meshObject and add to group
+			        // for each mesh construct meshObject and add to group
 			        for (var i = 0; i < vertices.length; i++)
 			        {
+			            /*
 			            var geometry = new THREE.Geometry();
 			            geometry.vertices = [];
 			            geometry.faces = [];
@@ -290,8 +291,19 @@
 			            //geometry.mergeVertices();
 			            //geometry.computeVertexNormals();
 			            geometry.computeFaceNormals();
+                        */
 
+			            var verts = new Float32Array(vertices[i]);
+			            var geometry = new THREE.BufferGeometry();
+			            geometry.addAttribute('position', new THREE.BufferAttribute(verts, 3));
 			            var mesh = new THREE.Mesh(geometry, defaultShadedMaterial);
+
+                        // TODO use render package normals instead
+			            mesh.geometry.verticesNeedUpdate = true;
+			            mesh.geometry.normalsNeedUpdate = true;
+			            mesh.geometry.computeBoundingSphere();
+			            mesh.geometry.computeFaceNormals();
+			            //mesh.geometry.computeVertexNormals();
 			            mesh.name = name;
 			            nodeGeomGroup.add(mesh);
 			        }     
