@@ -37,6 +37,7 @@ namespace ViewportViewExtension
 
             // TODO don't convert enums to lists?
             List<double[]> verts = new List<double[]>();
+            List<double[]> normals = new List<double[]>();
             //List<List<int>> vertIndices = new List<List<int>>();
             List<List<double>> points = new List<List<double>>();
             List<List<double>> lines = new List<List<double>>();
@@ -45,6 +46,7 @@ namespace ViewportViewExtension
             {
                 verts.Add(p.MeshVertices.ToArray());
                 //vertIndices.Add(p.MeshIndices.ToList());
+                normals.Add(p.MeshNormals.ToArray());
                 points.Add(p.PointVertices.ToList());
                 lines.Add(p.LineStripVertices.ToList());
             }
@@ -54,6 +56,7 @@ namespace ViewportViewExtension
             groupData.Add("transactionType", TransactionType);
             groupData.Add("displayPreview", DisplayPreview);
             groupData.Add("vertices", verts);
+            groupData.Add("normals", normals);
             //groupData.Add("faceIndices", vertIndices);
             groupData.Add("points", points);
             groupData.Add("lines", lines);

@@ -265,6 +265,7 @@
 			    // MESHES from render package
                 // lists (each mesh) of lists (each meshes vertices/faces)
 			    var vertices = groupData.vertices;
+			    var normals = groupData.normals;
 			    //var faces = groupData.faceIndices;
 
                 // verify groupData contains mesh objects
@@ -296,13 +297,14 @@
 			            var verts = new Float32Array(vertices[i]);
 			            var geometry = new THREE.BufferGeometry();
 			            geometry.addAttribute('position', new THREE.BufferAttribute(verts, 3));
+			            geometry.addAttribute( 'normal', new THREE.Float32BufferAttribute( normals[i], 3));
 			            var mesh = new THREE.Mesh(geometry, defaultShadedMaterial);
 
                         // TODO use render package normals instead
-			            mesh.geometry.verticesNeedUpdate = true;
-			            mesh.geometry.normalsNeedUpdate = true;
-			            mesh.geometry.computeBoundingSphere();
-			            mesh.geometry.computeFaceNormals();
+			            //mesh.geometry.verticesNeedUpdate = true;
+			            //mesh.geometry.normalsNeedUpdate = true;
+			            //mesh.geometry.computeBoundingSphere();
+			            //mesh.geometry.computeFaceNormals();
 			            //mesh.geometry.computeVertexNormals();
 			            mesh.name = name;
 			            nodeGeomGroup.add(mesh);
