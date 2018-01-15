@@ -17,8 +17,6 @@ namespace ViewportViewExtension
 {
    public class ViewportWindowViewModel : NotificationObject, IDisposable
     {
-        private string selectedNodesText = "Begin selecting ";
-
         // Variable for storing a reference to our loaded parameters
         private ReadyParams readyParams;
         
@@ -35,17 +33,14 @@ namespace ViewportViewExtension
             // javascript function
             string output = "renderDynamoMesh(";
 
-            // TODO don't convert enums to lists?
             List<double[]> verts = new List<double[]>();
             List<double[]> normals = new List<double[]>();
-            //List<List<int>> vertIndices = new List<List<int>>();
             List<List<double>> points = new List<List<double>>();
             List<List<double>> lines = new List<List<double>>();
 
             foreach (IRenderPackage p in PackageContent.Packages)
             {
                 verts.Add(p.MeshVertices.ToArray());
-                //vertIndices.Add(p.MeshIndices.ToList());
                 normals.Add(p.MeshNormals.ToArray());
                 points.Add(p.PointVertices.ToList());
                 lines.Add(p.LineStripVertices.ToList());
@@ -57,11 +52,10 @@ namespace ViewportViewExtension
             groupData.Add("displayPreview", DisplayPreview);
             groupData.Add("vertices", verts);
             groupData.Add("normals", normals);
-            //groupData.Add("faceIndices", vertIndices);
             groupData.Add("points", points);
             groupData.Add("lines", lines);
 
-            string jsonString = JsonConvert.SerializeObject(groupData/*, Formatting.Indented*/);
+            string jsonString = JsonConvert.SerializeObject(groupData);
 
             output += jsonString + ");";
 

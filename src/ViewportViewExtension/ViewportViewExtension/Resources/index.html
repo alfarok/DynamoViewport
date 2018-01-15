@@ -266,7 +266,6 @@
                 // lists (each mesh) of lists (each meshes vertices/faces)
 			    var vertices = groupData.vertices;
 			    var normals = groupData.normals;
-			    //var faces = groupData.faceIndices;
 
                 // verify groupData contains mesh objects
 			    if (vertices.length > 0 /*&& faces.length > 0*/)
@@ -274,38 +273,10 @@
 			        // for each mesh construct meshObject and add to group
 			        for (var i = 0; i < vertices.length; i++)
 			        {
-			            /*
-			            var geometry = new THREE.Geometry();
-			            geometry.vertices = [];
-			            geometry.faces = [];
-
-			            for (var j = 0; j < vertices[i].length; j += 3) {
-			                geometry.vertices.push(new THREE.Vector3(vertices[i][j], vertices[i][j + 1], vertices[i][j + 2]));
-
-			            }
-
-			            for (var j = 0; j < faces[i].length; j += 3) {
-			                geometry.faces.push(new THREE.Face3(faces[i][j], faces[i][j + 1], faces[i][j + 2]));
-			            }
-
-			            // Required for smooth shading (why do we store dupe vertices for each tri???)
-			            //geometry.mergeVertices();
-			            //geometry.computeVertexNormals();
-			            geometry.computeFaceNormals();
-                        */
-
-			            var verts = new Float32Array(vertices[i]);
 			            var geometry = new THREE.BufferGeometry();
-			            geometry.addAttribute('position', new THREE.BufferAttribute(verts, 3));
-			            geometry.addAttribute( 'normal', new THREE.Float32BufferAttribute( normals[i], 3));
+			            geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices[i], 3));
+			            geometry.addAttribute( 'normal', new THREE.Float32BufferAttribute(normals[i], 3));
 			            var mesh = new THREE.Mesh(geometry, defaultShadedMaterial);
-
-                        // TODO use render package normals instead
-			            //mesh.geometry.verticesNeedUpdate = true;
-			            //mesh.geometry.normalsNeedUpdate = true;
-			            //mesh.geometry.computeBoundingSphere();
-			            //mesh.geometry.computeFaceNormals();
-			            //mesh.geometry.computeVertexNormals();
 			            mesh.name = name;
 			            nodeGeomGroup.add(mesh);
 			        }     
