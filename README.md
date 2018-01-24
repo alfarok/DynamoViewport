@@ -7,7 +7,7 @@ DynamoViewport is an experiment originally researched during a 2017 recharge spr
 
 ## Installation
 ### Building Dynamo
-The Dynamo package manger disables the GPU in CEF.  This means currently you need a custom build of Dynamo to run Viewport. In order to enable GPU rendering comment out [this](https://github.com/DynamoDS/Dynamo/blob/master/src/DynamoPackagesUI/Views/PackageManagerView.xaml.cs#L34) line in the Dynamo [source](https://github.com/DynamoDS/Dynamo) and rebuild.  Viewport is exclusively built against DynamoCore v2.0.
+The Dynamo package manger disables the GPU in CEF.  This means currently you need a custom build of Dynamo to run Viewport. In order to enable GPU rendering comment out [this](https://github.com/DynamoDS/Dynamo/blob/master/src/LibraryViewExtension/Views/LibraryView.xaml.cs#L28) line in the Dynamo [source](https://github.com/DynamoDS/Dynamo) and rebuild.  Viewport is exclusively built against DynamoCore v2.0.
 
 ### Building Viewport
 - Clone repo, build against x64 architecture
