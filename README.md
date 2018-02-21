@@ -10,7 +10,7 @@ The Dynamo library is also a CEF application and determines which settings CEF i
 
 ### Building Viewport
 - Clone repo
-- In `ViewportWindow.xaml` update the `Address` property in cefsSharp:ChromiumWebBrowse ([line 25](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/ViewportWindow.xaml#L25)) with your clone directory (this is a bug - should point to Dynamos version of CEF)
+- In `ViewportWindow.xaml` update the `Address` property in cefsSharp:ChromiumWebBrowse ([line 25](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/ViewportWindow.xaml#L25)) with your clone directory (this is a bug tracked (here)[https://github.com/alfarok/DynamoViewport/issues/1] - should point to Dynamos version of CEF)
 ```xaml
 <cefSharp:ChromiumWebBrowser Name="Browser" Address="C:\GIT_LOCATION\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\Resources\index.html" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"></cefSharp:ChromiumWebBrowser>
 ```
