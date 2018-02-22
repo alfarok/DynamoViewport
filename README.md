@@ -10,24 +10,23 @@ The Dynamo library is also a CEF application and determines which settings CEF i
 
 ### Building Viewport
 - Clone repo
-- In `ViewportWindow.xaml` update the `Address` property in cefsSharp:ChromiumWebBrowse ([line 25](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/ViewportWindow.xaml#L25)) with your clone directory (this is a bug tracked [here](https://github.com/alfarok/DynamoViewport/issues/1) - should point to Dynamos version of CEF)
-```xaml
-<cefSharp:ChromiumWebBrowser Name="Browser" Address="C:\GIT_LOCATION\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\Resources\index.html" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"></cefSharp:ChromiumWebBrowser>
-```
--build against x64 architecture (will fail if not specified)
+- Build against x64 architecture (will fail if not specified)
+- This should populate the `..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\ViewportBuild` folder with 3 items required for the installation.
 
 ### Installing Viewport
-- Copy ViewportViewExtension.dll from
-`C:\..\REPO_LOCATION\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\bin\x64\DebugOrRelease`
-to `C:\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug`
-- Copy Viewport_ViewExtensionDefinition.xml from `C:\..\REPO_LOCATION\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\Viewport_ViewExtensionDefinition.xml` to `C:\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug`
+- Copy the ViewportResources folder and ViewportViewExtension.dll from `C:\..\REPO_LOCATION\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\ViewportBuild`
+to `C:\..\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug`
+- Copy the Viewport_ViewExtensionDefinition.xml from `C:\..\REPO_LOCATION\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\Viewport_ViewExtensionDefinition.xml` to `C:\..\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug`
 
 ### Running Dynamo
 - Run
-`C:\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug\DynamoSandbox.exe`
+`C:\..\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug\DynamoSandbox.exe`
 
 ### Running Viewport
 - In the main Dynamo toolbar View -> Launch Viewport
 
 ### Debugging
 `http://localhost:8088/`
+
+### WARNING
+The new Library in Dynamo 2.0 also uses CEF and is known to crash WebGL!  I recommend using the in-canvas search to avoid this issue.
