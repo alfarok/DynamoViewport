@@ -22,7 +22,7 @@
         </Grid.ColumnDefinitions>
         <TextBlock HorizontalAlignment="Stretch" Padding="5" FontWeight="Medium" FontSize="11" Background="#2d2d2d" Foreground="White" Grid.ColumnSpan="2"/>
         <TextBlock Name="ActiveMeshBox" FontSize="11" Padding="3" Grid.Row="0" Grid.Column="1" Background="#2d2d2d" Text=" " Foreground="White"/>
-        <cefSharp:ChromiumWebBrowser Name="Browser" Address="C:\Users\alfarok\Documents\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\Resources\index.html" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"></cefSharp:ChromiumWebBrowser>
+        <cefSharp:ChromiumWebBrowser Name="Browser" Address="{Binding Path=BrowserAddress}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"></cefSharp:ChromiumWebBrowser>
         <TextBox Name="ScriptTextBox" FontSize="11" Padding="3" Grid.Row="1" Grid.Column="0"/>
         <Button Name="ExecuteJavaScriptBtn" Grid.Row="1" Grid.Column="1" FontSize="11" Click="ExecuteJavaScriptBtn_Click">
             <TextBlock>Execute</TextBlock>

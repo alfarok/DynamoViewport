@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Autodesk.DesignScript.Interfaces;
 using Dynamo.Core;
 using Dynamo.Extensions;
@@ -27,6 +29,30 @@ namespace ViewportViewExtension
 
         // Find render nodes and build THREE meshes
         public string RenderData => $"{getRenderPackages()}"; // C#6.0
+
+        private string address;
+
+        public string Address
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(address))
+                {
+                    string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                    address = string.Format(@"{0}\ViewportResources", assemblyFolder);
+                }
+                return address;
+            }
+        }
+
+        public string BrowserAddress
+        {
+            get
+            {
+                return Address + @"\index.html";
+            }
+        }
 
         public string getRenderPackages()
         {
