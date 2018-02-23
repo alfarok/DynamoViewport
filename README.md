@@ -28,5 +28,5 @@ to `C:\..\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug`
 ### Debugging
 `http://localhost:8088/`
 
-### WARNING
-The new Library in Dynamo 2.0 also uses CEF and is known to crash WebGL!  I recommend using the in-canvas search to avoid this issue.
+### Warning
+The new Library in Dynamo 2.0 also uses CEF and can be known to crash WebGL.  If you run into this issue I recommend using the in-canvas search to avoid the crash.  It appears to occur more frequently while using a VM.
