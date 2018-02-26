@@ -1,7 +1,7 @@
 # DynamoViewport
 DynamoViewport is a Dynamo view extension that instantiates a CEF browser window. The browser runs a three.js scene that displays Dynamo geometry via the render package data.
 
-[Viewport Demo Video](https://drive.google.com/open?id=1irry8GOvSZqlSht9lDSrmHmKUwnM_YEX)
+[Viewport Demo Video](https://youtu.be/qXHMFWbzC-0)
 
 This project began as an experiment originally researched during a 2017 recharge sprint.  It is a WIP repo in early exploratory development.  Feel free to fork and make pull requests!
 
@@ -27,6 +27,3 @@ to `C:\..\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug`
 
 ### Debugging
 `http://localhost:8088/`
-
-### WARNING
-The new Library in Dynamo 2.0 also uses CEF and is known to crash WebGL!  I recommend using the in-canvas search to avoid this issue.
