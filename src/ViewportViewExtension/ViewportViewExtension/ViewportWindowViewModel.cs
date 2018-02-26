@@ -97,7 +97,15 @@ namespace ViewportViewExtension
 
             // TODO this could be dangerous if called in custom node ws
             HomeWorkspaceModel currentWS = readyParams.CurrentWorkspaceModel as HomeWorkspaceModel;
-            //currentWS.RefreshCompleted += CurrentWorkspaceModel_NodesChanged;
+
+            // TODO opening/changing WS needs more attention
+            // Register all nodes that currently exist in the WS
+            foreach(NodeModel node in currentWS.Nodes)
+            {
+                node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
+                node.PropertyChanged += CurrentWorkspaceModel_nodePropertyChanged;
+            }
+
         }
 
         // When a new node is added to the workspace
