@@ -19,9 +19,14 @@ namespace ViewportViewExtension
         // user will launch the pop-up window within Dynamo
         private MenuItem viewportMenuItem;
 
+        public string PackagePath { get; set; }
+
         public void Dispose() { }
 
-        public void Startup(ViewStartupParams p) { }
+        public void Startup(ViewStartupParams p)
+        {
+            PackagePath = p.PathManager.DefaultPackagesDirectory;
+        }
 
         public void Loaded(ViewLoadedParams p)
         {
@@ -32,7 +37,7 @@ namespace ViewportViewExtension
             viewportMenuItem.Click += (sender, args) =>
             {
                 // Instantiate a viewModel and window
-                var viewModel = new ViewportWindowViewModel(p);
+                var viewModel = new ViewportWindowViewModel(p, PackagePath);
                 var window = new ViewportWindow(viewModel)
                 {
                     // Set the data context for the main grid in the window

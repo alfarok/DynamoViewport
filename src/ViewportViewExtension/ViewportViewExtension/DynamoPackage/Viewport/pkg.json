@@ -1,0 +1,18 @@
+{
+  "license": "MIT",
+  "file_hash": null,
+  "name": "Viewport",
+  "version": "2.0.0",
+  "description": "Viewport is a Dynamo view extension that bridges Dynamo Core and Three.js using the chromium embedded framework.",
+  "group": "",
+  "keywords": ["dynamo","viewport","three.js","webGL","graphics","visualization","shaders","animation","color","viewer","threejs"],
+  "dependencies": [ ],
+  "contents": "",
+  "engine_version": "2.0.0.4196",
+  "engine": "dynamo",
+  "engine_metadata": "",
+  "site_url": "https://github.com/alfarok/DynamoViewport",
+  "repository_url": "https://github.com/alfarok/DynamoViewport",
+  "contains_binaries": true,
+  "node_libraries": [ ]
+}

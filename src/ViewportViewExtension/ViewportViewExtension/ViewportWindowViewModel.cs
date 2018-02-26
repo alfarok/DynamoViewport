@@ -1,19 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Autodesk.DesignScript.Interfaces;
 using Dynamo.Core;
 using Dynamo.Extensions;
 using Dynamo.Graph.Nodes;
 using Dynamo.Graph.Workspaces;
-using Dynamo.Models;
 using Dynamo.Visualization;
-using CefSharp;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ViewportViewExtension
 {
@@ -24,6 +19,7 @@ namespace ViewportViewExtension
         
         public RenderPackageCache PackageContent { get; set; }
         public string TransactionType { get; set; }
+        public string PackagePath { get; set; }
         public string NodeGuid { get; set;  }
         public bool DisplayPreview { get; set; } = true; // C#6.0
 
@@ -38,9 +34,7 @@ namespace ViewportViewExtension
             {
                 if (String.IsNullOrEmpty(address))
                 {
-                    string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-                    address = string.Format(@"{0}\ViewportResources", assemblyFolder);
+                    address = string.Format(@"{0}\Viewport\extra", PackagePath);
                 }
                 return address;
             }
@@ -88,11 +82,14 @@ namespace ViewportViewExtension
             return output;
         }
 
-        public ViewportWindowViewModel(ReadyParams p)
+        public ViewportWindowViewModel(ReadyParams p, string defaultPackagePath)
         {
             // Save a reference to our loaded parameters which
             // is required in order to access the workspaces
             readyParams = p;
+
+            // Save a reference to the default packages directory
+            PackagePath = defaultPackagePath;
 
             // Subscribe to NodeAdded and NodeRemoved events
             p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodeAdded;
