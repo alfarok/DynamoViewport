@@ -11,7 +11,7 @@ The Dynamo library is also a CEF application and determines which settings CEF i
 ### Building/Installing Viewport
 - Clone repo
 - Build against x64 architecture (will fail if not specified)
-- This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder.  This folder is also copied to `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages` and `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Revit\2.0\packages`
+- This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder.  This folder is also copied to `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages` (Add/Replace with `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Revit\2.0\packages` to copy in postbuild to Revit)
 
 ### Running Dynamo
 - Run
