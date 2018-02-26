@@ -217,8 +217,7 @@
     <PostBuildEvent>xcopy "$(ProjectDir)Resources" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y /E
 xcopy "$(ProjectDir)bin\x64\Debug\ViewportViewExtension.dll" "$(ProjectDir)DynamoPackage\Viewport\bin" /Y
 xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y
-xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Core\2.0\packages" /Y /E
-xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Revit\2.0\packages" /Y /E</PostBuildEvent>
+xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Core\2.0\packages" /Y /E</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
