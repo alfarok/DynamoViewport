@@ -35,6 +35,8 @@
 
 		<script src="assests/js/three.min.js"></script>
 		<script src="assests/js/OrbitControls.js"></script>
+        <script src="assests/js/Projector.js"></script>
+        <script src="assests/js/CanvasRenderer.js"></script>
 
 		<script>
             
@@ -93,7 +95,13 @@
 
 				//
 
-				renderer = new THREE.WebGLRenderer( { antialias: false, alpha : true } );
+				if (webglAvailable()) {
+				    renderer = new THREE.WebGLRenderer( { antialias: false, alpha: true } );
+				} else {
+				    renderer = new THREE.CanvasRenderer();
+				    defaultShadedMaterial = new THREE.MeshBasicMaterial({ color: 0xbbbbbb, overdraw: 0.5, side: THREE.DoubleSide });
+				}
+
 				renderer.setClearColor(0x000000, 0);
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
@@ -352,6 +360,19 @@
 			    mesh.position.z += vector.z;
 			}
             */
+
+			// Check if WebGL is available
+			function webglAvailable() {
+			    try {
+			        var canvas = document.createElement('canvas');
+			        return !!(window.WebGLRenderingContext && (
+                        canvas.getContext('webgl') ||
+                        canvas.getContext('experimental-webgl'))
+                    );
+			    } catch (e) {
+			        return false;
+			    }
+			}
 
             // Hot keys (some are temp for debugging)
 			function onDocumentKeyDown(event) {

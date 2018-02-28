@@ -62,19 +62,46 @@ namespace ViewportViewExtension.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to /**
+        /// * @author mrdoob / http://mrdoob.com/
+        /// */
+        ///
+        ///THREE.SpriteCanvasMaterial = function ( parameters ) {
+        ///
+        ///	THREE.Material.call( this );
+        ///
+        ///	this.type = &apos;SpriteCanvasMaterial&apos;;
+        ///
+        ///	this.color = new THREE.Color( 0xffffff );
+        ///	this.program = function () {};
+        ///
+        ///	this.setValues( parameters );
+        ///
+        ///};
+        ///
+        ///THREE.SpriteCanvasMaterial.prototype = Object.create( THREE.Material.prototype );
+        ///THREE.SpriteCanvasMaterial.prototype.constructor = THREE.SpriteCanvasMaterial;
+        ///THREE.SpriteCanvasMaterial.prototype.isSpriteCanvasMaterial = true [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string assets_js_CanvasRenderer_js {
+            get {
+                return ResourceManager.GetString("assets_js_CanvasRenderer_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /**
         /// * @author qiao / https://github.com/qiao
         /// * @author mrdoob / http://mrdoob.com
         /// * @author alteredq / http://alteredqualia.com/
         /// * @author WestLangley / http://github.com/WestLangley
         /// * @author erich666 / http://erichaines.com
-        /// * @author mrflix / http://felixniklas.de
-        /// * 
-        /// * released under MIT License (MIT)
         /// */
-        ////*global THREE, console */
         ///
-        ///// This set of controls performs orbiting, dollying (zooming), and panning. It maintains
-        ///// the &quot;up&quot; direction as +Y, unlike the TrackballControls. Touch  [rest of string was truncated]&quot;;.
+        ///// This set of controls performs orbiting, dollying (zooming), and panning.
+        ///// Unlike TrackballControls, it maintains the &quot;up&quot; direction object.up (+Y by default).
+        /////
+        /////    Orbit - left mouse / touch: one finger move
+        /////    Zoom - middle mouse, or mousewheel / touch: two finge [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string assets_js_OrbitControls_js {
             get {
@@ -83,8 +110,45 @@ namespace ViewportViewExtension.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /**
+        /// * @author mrdoob / http://mrdoob.com/
+        /// * @author supereggbert / http://www.paulbrunt.co.uk/
+        /// * @author julianwa / https://github.com/julianwa
+        /// */
+        ///
+        ///THREE.RenderableObject = function () {
+        ///
+        ///	this.id = 0;
+        ///
+        ///	this.object = null;
+        ///	this.z = 0;
+        ///	this.renderOrder = 0;
+        ///
+        ///};
+        ///
+        /////
+        ///
+        ///THREE.RenderableFace = function () {
+        ///
+        ///	this.id = 0;
+        ///
+        ///	this.v1 = new THREE.RenderableVertex();
+        ///	this.v2 = new THREE.RenderableVertex();
+        ///	this.v3 = new THREE.RenderableVertex();
+        ///
+        ///	this.normalModel = new THREE.Vector3();
+        ///
+        ///	this.vertexNormalsM [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string assets_js_Projector_js {
+            get {
+                return ResourceManager.GetString("assets_js_Projector_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to // threejs.org/license
-        ///(function(l,xa){&quot;object&quot;===typeof exports&amp;&amp;&quot;undefined&quot;!==typeof module?xa(exports):&quot;function&quot;===typeof define&amp;&amp;define.amd?define([&quot;exports&quot;],xa):xa(l.THREE={})})(this,function(l){function xa(){}function D(a,b){this.x=a||0;this.y=b||0}function H(){this.elements=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];0&lt;arguments.length&amp;&amp;console.error(&quot;THREE.Matrix4: the constructor no longer reads arguments. use .set() instead.&quot;)}function ha(a,b,c,d){this._x=a||0;this._y=b||0;this._z=c||0;this._w=void 0!==d [rest of string was truncated]&quot;;.
+        ///(function(l,xa){&quot;object&quot;===typeof exports&amp;&amp;&quot;undefined&quot;!==typeof module?xa(exports):&quot;function&quot;===typeof define&amp;&amp;define.amd?define([&quot;exports&quot;],xa):xa(l.THREE={})})(this,function(l){function xa(){}function C(a,b){this.x=a||0;this.y=b||0}function P(){this.elements=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];0&lt;arguments.length&amp;&amp;console.error(&quot;THREE.Matrix4: the constructor no longer reads arguments. use .set() instead.&quot;)}function ca(a,b,c,d){this._x=a||0;this._y=b||0;this._z=c||0;this._w=void 0!==d? [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string assets_js_three_min_js {
             get {
