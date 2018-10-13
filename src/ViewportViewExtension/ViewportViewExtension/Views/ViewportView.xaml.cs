@@ -7,17 +7,23 @@ using CefSharp.Wpf;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.IO;
+using ViewportViewExtension.ViewModels;
 
-namespace ViewportViewExtension
+namespace ViewportViewExtension.Views
 {
-    public partial class ViewportWindow : Window
+    public partial class ViewportView : UserControl
     {
-        public ViewportWindow( ViewportWindowViewModel vm )
+        public ViewportView( ViewportWindowViewModel vm )
         {
+            if (vm == null) return;
+
+            this.DataContext = vm;
+
+            // CEF will already by loaded by sandbox or revit
             if (!Cef.IsInitialized)
             {
                 var settings = new CefSettings { RemoteDebuggingPort = 8088 };
-
+                
                 settings.RegisterScheme(new CefCustomScheme
                 {
                     SchemeName = CefSharpSchemeHandlerFactory.SchemeName,
@@ -29,16 +35,39 @@ namespace ViewportViewExtension
 
             InitializeComponent();
 
+            this.Browser.MenuHandler = new ViewportViewContextMenuHandler();
+
             // When view model is updated call javascript update function
-            if (vm == null) return;
             vm.PropertyChanged += ExecuteJavascript;
 
             // Center initial viewport window upon launch
-            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            //WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
-            ScriptTextBox.KeyDown += new KeyEventHandler(textBoxKeyDown);
+            //ScriptTextBox.KeyDown += new KeyEventHandler(textBoxKeyDown);
         }
-        
+
+        private class ViewportViewContextMenuHandler : IContextMenuHandler
+        {
+            public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+            {
+                model.Clear();
+            }
+
+            public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
+            {
+                return false;
+            }
+
+            public void OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+            {
+            }
+
+            public bool RunContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
+            {
+                return false;
+            }
+        }
+/*
         // Enter to execute command line
         private async void textBoxKeyDown(object sender, KeyEventArgs e)
         {
@@ -52,6 +81,7 @@ namespace ViewportViewExtension
                 ScriptTextBox.Clear();
             }
         }
+*/
 
         // Update geometry when view model new changes
         private async void ExecuteJavascript(object sender, EventArgs e)
@@ -73,9 +103,10 @@ namespace ViewportViewExtension
         }
 
         // Command line execution
+        /*
         private async void ExecuteJavaScriptBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (/*Browser.CanExecuteJavascriptInMainFrame &&*/ !string.IsNullOrWhiteSpace(ScriptTextBox.Text))
+            if (!string.IsNullOrWhiteSpace(ScriptTextBox.Text))
             {
                 JavascriptResponse response = await Browser.EvaluateScriptAsync(ScriptTextBox.Text);
             }
@@ -83,5 +114,6 @@ namespace ViewportViewExtension
             // TODO - view history and active geometry
             ScriptTextBox.Clear();
         }
+        */
     }
 }
