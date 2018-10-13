@@ -16,11 +16,6 @@ namespace ViewportViewExtension
     /// </summary>
     public class ViewportViewExtension : IViewExtension
     {
-        private ViewLoadedParams viewLoadedParams;
-        private ViewStartupParams viewStartupParams;
-        private ViewportWindowViewModel customization;
-        private ViewportViewController controller;
-        
         // Create a variable for our menu item, this is how the
         // user will launch the pop-up window within Dynamo
         private MenuItem viewportMenuItem;
