@@ -88,7 +88,6 @@ namespace ViewportViewExtension
         private string address;
         private ICommandExecutive commandExecutive;
         private DynamoViewModel dynamoViewModel;
-        private ResourceHandlerFactory resourceFactory;
         private IDisposable observer;
         private ChromiumWebBrowser browser;
 
@@ -175,7 +174,6 @@ namespace ViewportViewExtension
             sidebarGrid.Children.Clear(); // Clear library contents
             sidebarGrid.Children.Add(view);
             browser.RegisterAsyncJsObject("controller", this);
-            RegisterResources(browser);
 
             view.Loaded += OnViewportViewLoaded;
             browser.SizeChanged += Browser_SizeChanged;
@@ -230,51 +228,6 @@ namespace ViewportViewExtension
         {
             System.Diagnostics.Trace.WriteLine("*****Chromium Browser Messages******");
             System.Diagnostics.Trace.Write(e.Message);
-        }
-
-        private void InitializeResourceStreams(DynamoModel model, ViewportWindowViewModel customization)
-        {
-            //TODO: Remove the parameter after testing.
-            //For testing purpose.
-            resourceFactory = new ResourceHandlerFactory(model.Logger);
-
-            //Register the resource stream registered through the ViewportWindowViewModel
-            /*
-            foreach (var item in customization.Resources)
-            {
-                OnResourceStreamRegistered(item.Key, item.Value);
-            }
-            */
-
-            //Setup the event handler for resource registration
-            //customization.ResourceStreamRegistered += OnResourceStreamRegistered;
-
-            resourceFactory.RegisterProvider("dist",
-                new DllResourceProvider("http://localhost/dist",
-                    "ViewportViewExtension.Resources"));
-
-            {
-                var url = "http://localhost/index.html";
-                var resource = "ViewportViewExtension.Resources.index.html";
-                var stream = LoadResource(resource);
-                resourceFactory.RegisterHandler(url, ResourceHandler.FromStream(stream));
-            }
-        }
-
-        private void OnResourceStreamRegistered(string key, Stream value)
-        {
-            Uri url = new Uri(key, UriKind.RelativeOrAbsolute);
-            if (!url.IsAbsoluteUri)
-                url = new Uri(new Uri("http://localhost"), url);
-
-            var extension = Path.GetExtension(key);
-            var handler = ResourceHandler.FromStream(value, ResourceHandler.GetMimeType(extension));
-            resourceFactory.RegisterHandler(url.AbsoluteUri, handler);
-        }
-
-        private void RegisterResources(ChromiumWebBrowser browser)
-        {
-            browser.ResourceHandlerFactory = resourceFactory;
         }
 
         public void Dispose()
