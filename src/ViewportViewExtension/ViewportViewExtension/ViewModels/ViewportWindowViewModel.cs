@@ -50,7 +50,6 @@ namespace ViewportViewExtension.ViewModels
             {
                 return Address + @"\index.html";
             }
-
         }
 
         public string getRenderPackages()
