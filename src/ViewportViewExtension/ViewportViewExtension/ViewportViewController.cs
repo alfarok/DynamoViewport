@@ -208,13 +208,6 @@ namespace ViewportViewExtension
             browser.InvalidateVisual();
         }
 
-        private Stream LoadResource(string url)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var textStream = assembly.GetManifestResourceStream(url);
-            return textStream;
-        }
-
         private void OnViewportViewLoaded(object sender, RoutedEventArgs e)
         {
             var viewportView = sender as ViewportView;

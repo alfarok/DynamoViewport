@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace ViewportViewExtension.ViewModels
 {
-   public class ViewportWindowViewModel : NotificationObject
+   public class ViewportWindowViewModel : NotificationObject, IDisposable
     {
         private string address;
 
@@ -29,16 +29,28 @@ namespace ViewportViewExtension.ViewModels
         public string RenderData => $"{getRenderPackages()}"; // C#6.0
 
         /// <summary>
-        /// Returns Web URL to bind
+        /// Location of JS assets
         /// </summary>
         public string Address
         {
-            get { return address; }
-            set
+            get
             {
-                address = value;
-                RaisePropertyChanged("Address");
+                if (String.IsNullOrEmpty(address))
+                {
+                    address = string.Format(@"{0}\Viewport\extra", PackagePath);
+                }
+                return address;
             }
+            set { }
+        }
+
+        /// <summary>
+        /// Returns Web URL to bind
+        /// </summary>
+        public string BrowserAddress
+        {
+            get { return Address + @"\index.html"; }
+
         }
 
         public string getRenderPackages()
@@ -77,29 +89,27 @@ namespace ViewportViewExtension.ViewModels
 
         public ViewportWindowViewModel(ReadyParams p, string defaultPackagePath)
         {
-             // Save a reference to our loaded parameters which
-             // is required in order to access the workspaces
-             readyParams = p;
+            // Save a reference to our loaded parameters which
+            // is required in order to access the workspaces
+            readyParams = p;
 
-             // Save a reference to the default packages directory
-             PackagePath = defaultPackagePath;
+            // Save a reference to the default packages directory
+            PackagePath = defaultPackagePath;
 
-            Address = PackagePath + @"\Viewport\extra\index.html";
+            // Subscribe to NodeAdded and NodeRemoved events
+            p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodeAdded;
+            p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodeRemoved;
 
-             // Subscribe to NodeAdded and NodeRemoved events
-             p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodeAdded;
-             p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodeRemoved;
-
-             // TODO this could be dangerous if called in custom node ws
-             HomeWorkspaceModel currentWS = readyParams.CurrentWorkspaceModel as HomeWorkspaceModel;
-
-             // TODO opening/changing WS needs more attention
-             // Register all nodes that currently exist in the WS
-             foreach(NodeModel node in currentWS.Nodes)
-             {
-                 node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
-                 node.PropertyChanged += CurrentWorkspaceModel_nodePropertyChanged;
-             }
+            // TODO this could be dangerous if called in custom node ws
+            HomeWorkspaceModel currentWS = readyParams.CurrentWorkspaceModel as HomeWorkspaceModel;
+                
+            // TODO opening/changing WS needs more attention
+            // Register all nodes that currently exist in the WS
+            foreach(NodeModel node in currentWS.Nodes)
+            {
+                node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
+                node.PropertyChanged += CurrentWorkspaceModel_nodePropertyChanged;
+            }
         }
 
         // When a new node is added to the workspace

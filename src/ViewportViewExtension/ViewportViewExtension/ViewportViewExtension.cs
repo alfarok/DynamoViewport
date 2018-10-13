@@ -32,8 +32,6 @@ namespace ViewportViewExtension
         public void Startup(ViewStartupParams p)
         {
             PackagePath = p.PathManager.DefaultPackagesDirectory;
-            //customization = new ViewportWindowViewModel(PackagePath);
-            //p.ExtensionManager.RegisterService<ILibraryViewCustomization>(customization);
         }
 
         public void Loaded(ViewLoadedParams p)
@@ -44,27 +42,9 @@ namespace ViewportViewExtension
             // Define the behavior when menu item is clicked
             viewportMenuItem.Click += (sender, args) =>
             {
-
                 var viewLoadedParams = p;
-                //var viewModel = new ViewportWindowViewModel(p, PackagePath);
                 var controller = new ViewportViewController(p.DynamoWindow, p.CommandExecutive, viewLoadedParams, PackagePath);
                 controller.AddViewportView();
-
-              /*
-                // Instantiate a viewModel and window
-                var window = new ViewportWindow(customization)
-                {
-                    // Set the data context for the main grid in the window
-                    // This refers to the main grid also seen in our xaml file
-                    MainGrid = { DataContext = customization },
-
-                    // Set the owner of the window to the Dynamo window.
-                    Owner = p.DynamoWindow
-                };
-
-                // Show a modeless window.
-                window.Show();
-                */
             };
 
             // add the menu item to our loaded parameters
