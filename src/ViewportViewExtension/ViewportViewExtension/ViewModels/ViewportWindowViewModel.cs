@@ -15,8 +15,6 @@ namespace ViewportViewExtension.ViewModels
    public class ViewportWindowViewModel : NotificationObject, IDisposable
     {
         private string address;
-
-        // Variable for storing a reference to our loaded parameters
         private ReadyParams readyParams;
         
         public RenderPackageCache PackageContent { get; set; }
@@ -41,7 +39,6 @@ namespace ViewportViewExtension.ViewModels
                 }
                 return address;
             }
-            set { }
         }
 
         /// <summary>
@@ -49,7 +46,10 @@ namespace ViewportViewExtension.ViewModels
         /// </summary>
         public string BrowserAddress
         {
-            get { return Address + @"\index.html"; }
+            get
+            {
+                return Address + @"\index.html";
+            }
 
         }
 
@@ -102,7 +102,7 @@ namespace ViewportViewExtension.ViewModels
 
             // TODO this could be dangerous if called in custom node ws
             HomeWorkspaceModel currentWS = readyParams.CurrentWorkspaceModel as HomeWorkspaceModel;
-                
+
             // TODO opening/changing WS needs more attention
             // Register all nodes that currently exist in the WS
             foreach(NodeModel node in currentWS.Nodes)

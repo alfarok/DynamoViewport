@@ -23,7 +23,7 @@ namespace ViewportViewExtension.Views
             if (!Cef.IsInitialized)
             {
                 var settings = new CefSettings { RemoteDebuggingPort = 8088 };
-                
+
                 settings.RegisterScheme(new CefCustomScheme
                 {
                     SchemeName = CefSharpSchemeHandlerFactory.SchemeName,
@@ -35,8 +35,6 @@ namespace ViewportViewExtension.Views
 
             InitializeComponent();
 
-            this.Browser.MenuHandler = new ViewportViewContextMenuHandler();
-
             // When view model is updated call javascript update function
             vm.PropertyChanged += ExecuteJavascript;
 
@@ -45,43 +43,6 @@ namespace ViewportViewExtension.Views
 
             //ScriptTextBox.KeyDown += new KeyEventHandler(textBoxKeyDown);
         }
-
-        private class ViewportViewContextMenuHandler : IContextMenuHandler
-        {
-            public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
-            {
-                model.Clear();
-            }
-
-            public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
-            {
-                return false;
-            }
-
-            public void OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
-            {
-            }
-
-            public bool RunContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
-            {
-                return false;
-            }
-        }
-/*
-        // Enter to execute command line
-        private async void textBoxKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                if (!string.IsNullOrWhiteSpace(ScriptTextBox.Text))
-                {
-                    JavascriptResponse response = await Browser.EvaluateScriptAsync(ScriptTextBox.Text);
-                }
-
-                ScriptTextBox.Clear();
-            }
-        }
-*/
 
         // Update geometry when view model new changes
         private async void ExecuteJavascript(object sender, EventArgs e)
@@ -101,9 +62,22 @@ namespace ViewportViewExtension.Views
                 }
             }
         }
+/*
+        // Enter to execute command line
+        private async void textBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (!string.IsNullOrWhiteSpace(ScriptTextBox.Text))
+                {
+                    JavascriptResponse response = await Browser.EvaluateScriptAsync(ScriptTextBox.Text);
+                }
+
+                ScriptTextBox.Clear();
+            }
+        }
 
         // Command line execution
-        /*
         private async void ExecuteJavaScriptBtn_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(ScriptTextBox.Text))
@@ -114,6 +88,6 @@ namespace ViewportViewExtension.Views
             // TODO - view history and active geometry
             ScriptTextBox.Clear();
         }
-        */
+*/
     }
 }
