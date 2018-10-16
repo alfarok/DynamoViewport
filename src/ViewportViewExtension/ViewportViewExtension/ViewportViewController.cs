@@ -107,7 +107,7 @@ namespace ViewportViewExtension
             dynamoViewModel = dynamoView.DataContext as DynamoViewModel;
 
             this.commandExecutive = commandExecutive;
-            //InitializeResourceStreams(dynamoViewModel.Model, customization);
+
             dynamoWindow.StateChanged += DynamoWindowStateChanged;
             dynamoWindow.SizeChanged += DynamoWindow_SizeChanged;
         }
@@ -115,6 +115,8 @@ namespace ViewportViewExtension
         //if the window is resized toggle visibility of browser to force redraw
         private void DynamoWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            var libraryViewColumn = dynamoWindow.FindName("LibraryViewColumn") as ColumnDefinition;
+            libraryViewColumn.MaxWidth = e.NewSize.Width - 50; // TODO - cleanup
             browser.InvalidateVisual();
         }
 
@@ -164,13 +166,16 @@ namespace ViewportViewExtension
         /// <returns>LibraryView control</returns>
         internal ViewportView AddViewportView()
         {
-            var sidebarGrid = dynamoWindow.FindName("sidebarGrid") as Grid;
+            var libraryViewColumn = dynamoWindow.FindName("LibraryViewColumn") as ColumnDefinition;
+            libraryViewColumn.MaxWidth = dynamoWindow.ActualWidth - 50; // TODO - cleanup
 
             var model = new ViewportWindowViewModel(this.viewLoadedParams, this.address);
             var view = new ViewportView(model); // This crashes
 
             var browser = view.Browser;
             this.browser = browser;
+
+            var sidebarGrid = dynamoWindow.FindName("sidebarGrid") as Grid;
             sidebarGrid.Children.Clear(); // Clear library contents
             sidebarGrid.Children.Add(view);
             browser.RegisterAsyncJsObject("controller", this);
