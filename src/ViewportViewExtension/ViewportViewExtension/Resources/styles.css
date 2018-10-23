@@ -1,0 +1,28 @@
+body {
+    color: #bbbbbb;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    background-color: #2d2d2d;
+    margin: 0;
+    overflow: hidden;
+}
+
+#debugger {
+    position: fixed;
+    left: 0;
+    padding: 10px;
+}
+
+#bottom-menu {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+}
+
+#gui-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}

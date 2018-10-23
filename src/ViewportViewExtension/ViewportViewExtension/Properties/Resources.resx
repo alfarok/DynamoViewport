@@ -133,4 +133,13 @@
   <data name="assets_js_Projector_js" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\assests\js\Projector.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="assets_dat_gui_js" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\assests\js\dat.gui.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="assets_viewer_js" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\assests\js\viewer.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="styles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\styles.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
 </root>

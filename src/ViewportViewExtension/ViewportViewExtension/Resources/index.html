@@ -1,468 +1,54 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
-			body {
-				color: #cccccc;
-				font-family:Monospace;
-				font-size:13px;
-				text-align:center;
+<body>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css">
+        <div id="gui-container"></div>
+    </head>
 
-				background-color: rgba(225,225,225,0);
-				margin: 0px;
-				overflow: hidden;
-			}
+    <script src="assests/js/three.min.js"></script>
+    <script src="assests/js/OrbitControls.js"></script>
+    <script src="assests/js/viewer.js"></script>
+    <script src="assests/js/dat.gui.js" type="text/javascript"></script>
 
-			#info {
-				position: absolute;
-				top: 0px; width: 100%;
-				padding: 5px;
-			}
+    <div id="debugger">
+        <table id="debugTable" style="display:inline"></table>
+    </div>
+    <div id="bottom-menu">
+        <input type="checkbox" id="debugActive" onclick="toggleDebug()">
+        <label for="debugActive">debug</label>
+        <input type="checkbox" id="raycastingActive" onclick="toggleRaycasting()">
+        <label for="raycastingActive">raycasting</label>
+        <input type="checkbox" id="orthoActive" onclick="toggleOrtho()">
+        <label for="orthoActive">ortho</label>
+    </div>
 
-			a {
+    <script>
+			// VIEWER //
+			let camera, orthoCamera, perspectiveCamera;
+			let scene, renderer, controls;
 
-				color: #0080ff;
-			}
+			// GUI //
+			let menu;
+			let rotation = false;
+			let colorHistory;
 
-		</style>
-	</head>
-	<body>
+			// MATERIALS //
+			let material, wireframeMaterial;
 
-		<div id="container"></div>
-		<div id="info"></div>
-
-		<script src="assests/js/three.min.js"></script>
-		<script src="assests/js/OrbitControls.js"></script>
-        <script src="assests/js/Projector.js"></script>
-        <script src="assests/js/CanvasRenderer.js"></script>
-
-		<script>
+			// RAYCASTING //
+			let raycasting = false;
+			let raycaster = new THREE.Raycaster();
+			let mouse = new THREE.Vector2(), INTERSECTED;
             
-			var container;
+            // DYNAMO GEOMETRY
+			let nodeGeomGroups = [];
+			let activeNodes = [];
 
-			var camera, scene, renderer, controls;
-
-			var defaultShadedMaterial;
-			var defaultWireFrameMaterial;
-
-			var nodeGeomGroups = [];
-			var activeNodes = [];
-
-			var rotation = false;
-
-			var colorHistory;
-
-			//var raycaster = new THREE.Raycaster();
-			//var mouse = new THREE.Vector2(), INTERSECTED;
-
+			// RENDER //
 			init();
-			animate();
-
-			function init() {
-
-				container = document.getElementById( 'container' );
-
-				var aspect = window.innerWidth / window.innerHeight;
-				camera = new THREE.PerspectiveCamera(45, aspect, 1, 10000);
-
-				scene = new THREE.Scene();
-				//scene.fog = new THREE.Fog(0x050505, 2000, 3500);
-				scene.add(camera);
-
-				let ambientLight = new THREE.AmbientLight(0x404040);
-				scene.add(ambientLight);
-			   
-				var pointLight = new THREE.PointLight(0xffffff, 1);
-				camera.add(pointLight);
-
-			    // Default mesh material
-				defaultShadedMaterial = new THREE.MeshLambertMaterial({
-				    color: 0xbbbbbb, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
-				});
-
-			    // Default wireframe material
-				defaultWireFrameMaterial = new THREE.MeshBasicMaterial({
-				    color: 0xbbbbbb, wireframe: true
-				});
-
-				buildSceneHelpers();
-
-				controls = new THREE.OrbitControls( camera );
-				camera.position.set( 0, 20, 100 );
-				controls.update();
-
-				//
-
-				if (webglAvailable()) {
-				    renderer = new THREE.WebGLRenderer( { antialias: false, alpha: true } );
-				} else {
-				    renderer = new THREE.CanvasRenderer();
-				    defaultShadedMaterial = new THREE.MeshBasicMaterial({ color: 0xbbbbbb, overdraw: 0.5, side: THREE.DoubleSide });
-				}
-
-				renderer.setClearColor(0x000000, 0);
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-				container.appendChild( renderer.domElement );
-
-				//
-
-				window.addEventListener('resize', onWindowResize, false);
-				//window.addEventListener('mousemove', onMouseMove, false);
-				window.requestAnimationFrame(render);
-				document.addEventListener("keydown", onDocumentKeyDown, false);
-			}
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-			}
-
-			//
-
-			function animate() {
-
-				requestAnimationFrame( animate );
-
-				controls.update();
-
-				//move();
-
-				render();
-			}
-
-			function render() {
-
-				//var time = Date.now() * 0.001;
-
-                // sample for updating the render loop (press 'R' to toggle mesh rotation)
-			    if (rotation == true) {
-			        for (var i = 0; i < nodeGeomGroups.length; i++) {
-			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
-			                if (nodeGeomGroups[i].children[j].type == "Mesh" ||
-                                nodeGeomGroups[i].children[j].type == "Line" ||
-                                nodeGeomGroups[i].children[j].type == "Point") {
-			                        nodeGeomGroups[i].children[j].rotation.x += 0.005;
-			                        nodeGeomGroups[i].children[j].rotation.y += 0.005;
-			                }
-			            }
-			        }
-			    }
-
-			    /*
-                // Highlight selected geometry
-			    // update the picking ray with the camera and mouse position
-				raycaster.setFromCamera(mouse, camera);
-
-				var intersects = raycaster.intersectObjects(scene.children);
-
-				if (intersects.length > 0) {
-				    if (INTERSECTED != intersects[0].object && intersects[0].object.isMesh == true) {
-				        console.log(intersects[0].object.geometry.faces);
-				        INTERSECTED = intersects[0].object;
-				        INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-				        //INTERSECTED.material.emissive.setHex(0xff0000);
-				        colorHistory = INTERSECTED.material.color.getHex();
-				        INTERSECTED.material.color.setHex(0x009eff);
-				    }
-				} else {
-				    if (INTERSECTED) INTERSECTED.material.color.setHex(0xbbbbbb);
-				    INTERSECTED = null;
-				}
-                */
-
-				renderer.render( scene, camera );
-			}
-
-            /*
-			function onMouseMove(event) {
-
-			    // calculate mouse position in normalized device coordinates
-			    // (-1 to +1) for both components
-
-			    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-			    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-			}
-            */
-
-			function buildSceneHelpers() {
-			    var size = 100;
-			    var step = 5;
-
-			    var gridHelper = new THREE.Geometry();
-			    var lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 });
-
-			    for (var i = -size; i <= size; i += step) {
-
-			        gridHelper.vertices.push(new THREE.Vector3(-size, 0, i));
-			        gridHelper.vertices.push(new THREE.Vector3(size, 0, i));
-
-			        gridHelper.vertices.push(new THREE.Vector3(i, 0, -size));
-			        gridHelper.vertices.push(new THREE.Vector3(i, 0, size));
-
-			    }
-
-			    var gridLines = new THREE.Line(gridHelper, lineMaterial, THREE.LinePieces);
-			    gridLines.name = "grid";
-			    scene.add(gridLines);
-
-			    var axisHelper = new THREE.AxisHelper(100);
-			    axisHelper.name = "axis";
-			    axisHelper.translateY(.001);
-			    axisHelper.rotateX(-Math.PI / 2);
-			    scene.add(axisHelper);
-			}
-
-            // TODO this needs serious cleanup - possible to handle most of this on the C# side?
-            // Helper function to build THREE objects from render package json
-			function renderDynamoMesh(groupData) {
-
-			    var name = groupData.name;
-			    var status = groupData.transactionType;
-
-			    if (status == "remove") {
-			        console.log("existing object removed");
-                    // need to get ALL objects with this name
-			        var group = scene.getObjectByName(name);
-			        scene.remove(group);
-			        nodeGeomGroups.pop(group);
-			        activeNodes.pop(name);
-			        return;
-			    }
-			    else if (status == "togglePreview") {
-			        console.log("hide/show object preview");
-			        var group = scene.getObjectByName(name);
-			        if (groupData.displayPreview == true) {
-			            group.visible = true;
-			        }
-			        else {
-			            group.visible = false;
-			        }
-                    //return;
-			    }
-
-                // TODO Dynamic mesh - should update verts not remove
-                // if object already exists remove it and redraw
-			    if (activeNodes.indexOf(name) >= 0) {
-			        console.log("existing object updated");
-			        var group = scene.getObjectByName(name);
-			        scene.remove(group);
-			        nodeGeomGroups.pop(group);
-			    }
-
-                // new object
-			    else {
-			        console.log("new object added");
-			        console.log(name);
-			        activeNodes.push(name);
-			    }
-
-			    // Groups make working with sets of objects syntactically clearer
-                // but are almost indentical to a traditional object.
-			    // Here each group contains all the geometry for a single active node.
-			    var nodeGeomGroup = new THREE.Group();
-			    nodeGeomGroup.name = name;
-                
-			    // MESHES from render package
-                // lists (each mesh) of lists (each meshes vertices/faces)
-			    var vertices = groupData.vertices;
-			    var normals = groupData.normals;
-
-                // verify groupData contains mesh objects
-			    if (vertices.length > 0 /*&& faces.length > 0*/)
-			    {
-			        // for each mesh construct meshObject and add to group
-			        for (var i = 0; i < vertices.length; i++)
-			        {
-			            var geometry = new THREE.BufferGeometry();
-			            geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices[i], 3));
-			            geometry.addAttribute( 'normal', new THREE.Float32BufferAttribute(normals[i], 3));
-			            var mesh = new THREE.Mesh(geometry, defaultShadedMaterial);
-			            mesh.name = name;
-			            nodeGeomGroup.add(mesh);
-			        }     
-			    }
-                
-                // TODO why do small L-shaped lines initially render for points?
-			    // LINES from render package
-			    var lines = groupData.lines;
-
-			    // verify groupData contains line objects
-			    if (lines.length > 0)
-			    {
-			        var lineMaterial = new THREE.LineBasicMaterial({
-			            color: 0xffffff,
-			            linewidth: 10 // doesn't do anything - known issue
-			        });
-
-			        // for each line construct lineObject and add to group
-			        for (var i = 0; i < lines.length; i++) {
-			            var lineGeometry = new THREE.Geometry();
-			            lineGeometry.vertices = [];
-
-			            for (var j = 0; j < lines[i].length; j += 3) {
-			                lineGeometry.vertices.push(new THREE.Vector3(lines[i][j], lines[i][j + 1], lines[i][j + 2]));
-			            }
-
-			            var line = new THREE.Line(lineGeometry, lineMaterial);
-			            line.name = name;
-			            nodeGeomGroup.add(line);
-			        }
-			    }
-
-			    // Points from render package
-			    var points = groupData.points;
-
-			    // verify groupData contains line objects
-			    if (points.length > 0) {
-
-			        var pointMaterial = new THREE.PointsMaterial({ color: 0x009eff, size: 5, sizeAttenuation: false, side: THREE.DoubleSide });
-
-			        // for each point set construct pointObject and add to group
-			        for (var i = 0; i < points.length; i++) {
-			            var pointGeometry = new THREE.Geometry();
-			            pointGeometry.vertices = [];
-
-			            for (var j = 0; j < points[i].length; j += 3) {
-			                pointGeometry.vertices.push(new THREE.Vector3(points[i][j], points[i][j + 1], points[i][j + 2]));
-			            }
-
-			            var pointCloud = new THREE.Points(pointGeometry, pointMaterial);
-			            pointCloud.name = name;
-			            nodeGeomGroup.add(pointCloud);
-			        }
-			    }
-
-                // If displayPreview is false set group visible property before adding to scene
-			    if (groupData.displayPreview == false) {
-			        nodeGeomGroup.visible = false;
-			    }
-
-			    nodeGeomGroups.push(nodeGeomGroup);
-			    scene.add(nodeGeomGroup);
-
-			    console.log(scene);
-			}
-
-            /*
-			function move(name, direction, speed) {
-			    var mesh = scene.getObjectByName(name);
-			    var vector = direction.clone().multiplyScalar(speed, speed, speed);
-			    mesh.position.x += vector.x;
-			    mesh.position.y += vector.y;
-			    mesh.position.z += vector.z;
-			}
-            */
-
-			// Check if WebGL is available
-			function webglAvailable() {
-			    try {
-			        var canvas = document.createElement('canvas');
-			        return !!(window.WebGLRenderingContext && (
-                        canvas.getContext('webgl') ||
-                        canvas.getContext('experimental-webgl'))
-                    );
-			    } catch (e) {
-			        return false;
-			    }
-			}
-
-            // Hot keys (some are temp for debugging)
-			function onDocumentKeyDown(event) {
-
-                // TODO toggling cameras is broken
-			    var keyCode = event.which;
-			    // O = ortho
-			    if (keyCode == 79) {
-			        // set ortho cam
-			        oCam.position.set(pCam.position);
-			        camera = oCam;
-			    }
-			        // P = perspective
-			    else if (keyCode == 80) {
-			        // set perspective cam
-			        pCam.position.set(oCam.position);
-			        camera = pCam;
-			    }
-			        // S = shader active
-			    else if (keyCode == 83) {
-			        for (var i = 0; i < nodeGeomGroups.length; i++) {
-			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
-			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
-			                    nodeGeomGroups[i].children[j].material = defaultShadedMaterial;
-			                }
-			            }
-			        }
-			    }
-			        // W = wireframe active
-			    else if (keyCode == 87) {
-			        for (var i = 0; i < nodeGeomGroups.length; i++) {
-			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
-			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
-			                    nodeGeomGroups[i].children[j].material = defaultWireFrameMaterial;
-			                }
-			            }
-			        }
-			    }
-			        // R = toggle rotation
-			    else if (keyCode == 82) {
-			        if (rotation == false)
-			        {
-			            rotation = true;
-			        }
-			        else if (rotation == true)
-			        {
-			            rotation = false;
-			        }
-			    }
-			        // 1 = Pink
-			    else if (keyCode == 49) {
-			        for (var i = 0; i < nodeGeomGroups.length; i++) {
-			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
-			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
-			                    nodeGeomGroups[i].children[j].material.color.setHex(0x00ff00);
-			                }
-			            }
-			        }
-			    }
-			        // 2 = Green
-			    else if (keyCode == 50) {
-			        for (var i = 0; i < nodeGeomGroups.length; i++) {
-			            for (var j = 0; j < nodeGeomGroups[i].children.length; j++) {
-			                if (nodeGeomGroups[i].children[j].type == "Mesh") {
-			                    nodeGeomGroups[i].children[j].material.color.setHex(0xff00ff);
-			                }
-			            }
-			        }
-			    }
-			        // G = toggle grid
-			    else if (keyCode == 71) {
-			        var grid = scene.getObjectByName("grid");
-			        if (grid.visible == true) {
-			            grid.visible = false;
-			        }
-			        else {
-			            grid.visible = true;
-			        }
-			    }
-			        // A = toggle axis
-			    else if (keyCode == 65) {
-			        var axis = scene.getObjectByName("axis");
-			        if (axis.visible == true) {
-			            axis.visible = false;
-			        }
-			        else {
-			            axis.visible = true;
-			        }
-			    }
-			}
-		</script>
-	</body>
+			render();
+    </script>
+</body>
 </html>
