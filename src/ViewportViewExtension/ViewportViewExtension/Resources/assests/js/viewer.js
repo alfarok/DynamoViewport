@@ -17,7 +17,7 @@ function init() {
     camera.add(pointLight);
 
     material = new THREE.MeshPhongMaterial({
-        color: 0xbb00ff /*bbbbbb*/, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
+        color: 0xbbbbbb, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
     });
 
     wireframeMaterial = new THREE.MeshBasicMaterial({
@@ -43,16 +43,14 @@ function init() {
     // GUI //
     let Menu = function() {
         // Set default values
-        //this.message = 'simple gui';
-        this.Speed = 0.0005;
-        this.ShaderColor = '#bb00ff';
+        this.Speed = 0.0000;
+        this.ShaderColor = '#bbbbbb';
         this.WireframeColor = '#2d2d2d'
         this.BackgroundColor = '#2d2d2d';
         this.Shader = function() { toggleShader() };
         this.Wireframe = function() { toggleWireframe() };
         this.Grid = function() { toggleGrid() };
         this.Axes = function() { toggleAxes() };
-        this.Screenshot = function() { printScreen() };
     };
     
     // Instantiate Menu
@@ -65,7 +63,7 @@ function init() {
     let animateFolder = gui.addFolder('Animate');
     let toggleFolder = gui.addFolder('Hide/Show');
     //gui.add(menu, 'message');
-    animateFolder.add(menu, 'Speed', 0, 0.001);
+    animateFolder.add(menu, 'Speed', -0.001, 0.001);
     let shaderColorController = colorFolder.addColor(menu, 'ShaderColor');
     shaderColorController.onChange( function( colorValue ) {
         colorValue=colorValue.replace( '#','0x' );
@@ -84,7 +82,6 @@ function init() {
     toggleFolder.add(menu, 'Wireframe');
     toggleFolder.add(menu, 'Grid');
     toggleFolder.add(menu, 'Axes');
-    gui.add(menu, 'Screenshot');
 
     let GUIContainer = document.getElementById('gui-container');
     GUIContainer.appendChild(gui.domElement);
@@ -94,28 +91,22 @@ function init() {
 }
 
 function render(time) {
-    //mesh.rotation.x = mesh2.rotation.x = time * menu.Speed;
-    //mesh.rotation.y = mesh2.rotation.y = time * menu.Speed;
 
-    if(raycasting) {
-        // Find intersections
-        raycaster.setFromCamera( mouse, camera );
-        var intersects = raycaster.intersectObjects( scene.children );
-        if ( intersects.length > 0 ) {
-            if ( INTERSECTED != intersects[0].object && intersects[0].object instanceof THREE.Mesh ) {
-                if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-                INTERSECTED = intersects[0].object;
-                INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-                INTERSECTED.material.color.setHex( 0x555555 );
+    // TODO - this is inefficient but just a sample of animation
+    if(menu.Speed > 0)
+    {
+        scene.traverse (function (object) {
+            if (object.name === 'meshGeometry' ||
+                object.name === 'wireframeGeometry' ||
+                object.name === "lineGeometry" ||
+                object.name === "pointGeometry"
+            ) { 
+                object.rotation.x = time * menu.Speed;
+                object.rotation.y = time * menu.Speed;
+                object.rotation.z = time * menu.Speed;
             }
-        } else {
-            if ( INTERSECTED ) {
-                INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-            }
-            INTERSECTED = null;
-        }
+        });
     }
-
     renderer.render( scene, camera );
     requestAnimationFrame( render );
     controls.update();
@@ -164,90 +155,24 @@ function buildSceneHelpers() {
     scene.add(axesHelper);
 }
 
-function printDebugger() {
-    var debuggerUI = document.getElementById('debugTable');
+// Hide/Show Functions //
+
+function toggleShader() {
     scene.traverse (function (object) {
-        debuggerUI.innerHTML += "<tr><td>{ " + object.type + ":</td><td>" + object.uuid + " }</td></tr><br/>";
-        // if (object instanceof THREE.Mesh) { Do something to all meshes }
+        if (object.name === 'meshGeometry') { 
+            if(object.visible === false) { object.visible = true; }
+            else { object.visible = false; } 
+        }
     });
 }
 
-function printScreen() {
-    try {
-        renderer.render(scene, camera);
-        renderer.domElement.toBlob(function(blob) {
-            let a = document.createElement('a');
-            let url = URL.createObjectURL(blob);
-            a.href = url;
-            a.download = 'canvas.png';
-            a.click();
-        }, 'image/png', 1.0);
-    } 
-    catch(e) {
-        console.log('Unable to capture screenshot.');
-        return;
-    }
-}
-
-// Hide/Show Functions //
-
-function toggleDebug() {
-    var chbox = document.getElementById('debugActive');
-    var debuggerUI = document.getElementById('debugTable');
-    if(chbox.checked) { 
-        debuggerUI.innerHTML = "";
-        printDebugger();
-        debuggerUI.style = "display: inline;"; 
-    }
-    else { debuggerUI.style = "display: none;"; }
-}
-
-function toggleShader() {
-    // TODO this is a temp hack
-    if(mesh.visible === false) { mesh.visible = true; }
-    else { mesh.visible = false; }
-}
-
 function toggleWireframe() {
-    // TODO this is a temp hack
-    if(mesh2.visible === false) { 
-        mesh2.visible = true; 
-        /*
-        scene.traverse (function (object) {
-            if (object instanceof THREE.Mesh) { 
-                object.visible = true; 
-            }
-        });
-        */
-    }
-    else { 
-        mesh2.visible = false; 
-        /*
-        scene.traverse (function (object) {
-            if (object instanceof THREE.Mesh) { 
-                object.visible = false; 
-            }
-        });
-        */
-    }
-}
-
-function toggleRaycasting() {
-    var chbox = document.getElementById('raycastingActive');
-    if(chbox.checked) { raycasting = true; }
-    else { raycasting = false; }
-}
-
-function toggleOrtho() {
-    var chbox = document.getElementById('orthoActive');
-    if(chbox.checked) { 
-        camera = orthoCamera;
-        camera.position.set(0, 0, 400);
-    }
-    else { 
-        camera = perspectiveCamera;
-        camera.position.set(0, 20, 100);
-    }
+    scene.traverse (function (object) {
+        if (object.name === 'wireframeGeometry') { 
+            if(object.visible === false) { object.visible = true; }
+            else { object.visible = false; } 
+        }
+    });
 }
 
 function toggleGrid() {
@@ -263,9 +188,9 @@ function toggleAxes() {
 }
 
 // TODO this needs serious cleanup - possible to handle most of this on the C# side?
+// It also seems there is a bug or timing issue that gets geometry cache out of sync?
 // Helper function to build THREE objects from render package json
 function renderDynamoMesh(groupData) {
-
     var name = groupData.name;
     var status = groupData.transactionType;
 
@@ -327,8 +252,11 @@ function renderDynamoMesh(groupData) {
             geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices[i], 3));
             geometry.addAttribute( 'normal', new THREE.Float32BufferAttribute(normals[i], 3));
             var mesh = new THREE.Mesh(geometry, material);
-            mesh.name = name;
+            var wireframe = new THREE.Mesh(geometry, wireframeMaterial);
+            mesh.name = "meshGeometry";
+            wireframe.name = "wireframeGeometry";
             nodeGeomGroup.add(mesh);
+            nodeGeomGroup.add(wireframe);
         }     
     }
     
@@ -354,7 +282,7 @@ function renderDynamoMesh(groupData) {
             }
 
             var line = new THREE.Line(lineGeometry, lineMaterial);
-            line.name = name;
+            line.name = "lineGeometry";
             nodeGeomGroup.add(line);
         }
     }
@@ -377,7 +305,7 @@ function renderDynamoMesh(groupData) {
             }
 
             var pointCloud = new THREE.Points(pointGeometry, pointMaterial);
-            pointCloud.name = name;
+            pointCloud.name = "pointGeometry";
             nodeGeomGroup.add(pointCloud);
         }
     }

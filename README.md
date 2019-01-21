@@ -6,7 +6,12 @@ DynamoViewport is a Dynamo view extension that instantiates a CEF browser window
 This project began as an experiment originally researched during a 2017 recharge sprint.  It is a WIP repo in early exploratory development.  Feel free to fork and make pull requests!
 
 ### Building Dynamo
-The Dynamo library is also a CEF application and determines which settings CEF is initialized with for any other instances that may get instantiated within the given Dynamo environment.  In this initialization the library disables GPU usage in CEF.  This means currently you need a custom build of [Dynamo](https://github.com/DynamoDS/Dynamo) to run Viewport. In order to enable GPU rendering comment out [this](https://github.com/DynamoDS/Dynamo/blob/master/src/LibraryViewExtension/Views/LibraryView.xaml.cs#L28) line in the Dynamo [source](https://github.com/DynamoDS/Dynamo) and rebuild.  Viewport is exclusively built against DynamoCore v2.0.
+CEF is either initialized by 
+- DynamoCore in DynamoSandbox
+- Revit in Dynamo for Revit 2020+
+- Possibly another host application or plugin that is using CEF in the same process
+
+Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initiatization in Dynamo 1.3.X and older
 
 ### Building/Installing Viewport
 - Clone repo

@@ -214,7 +214,7 @@
     <PostBuildEvent>xcopy "$(ProjectDir)Resources" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y /E
 xcopy "$(ProjectDir)bin\x64\Debug\ViewportViewExtension.dll" "$(ProjectDir)DynamoPackage\Viewport\bin" /Y
 xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y
-xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Core\2.1\packages" /Y /E</PostBuildEvent>
+xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Core\2.2\packages" /Y /E</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

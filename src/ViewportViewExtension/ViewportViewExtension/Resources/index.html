@@ -1,54 +1,39 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<body>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="styles.css">
-        <div id="gui-container"></div>
-    </head>
+    <body>
+        <head>
+            <meta charset="utf-8">
+            <link rel="stylesheet" href="styles.css">
+            <div id="gui-container"></div>
+        </head>
 
-    <script src="assests/js/three.min.js"></script>
-    <script src="assests/js/OrbitControls.js"></script>
-    <script src="assests/js/viewer.js"></script>
-    <script src="assests/js/dat.gui.js" type="text/javascript"></script>
+        <script src="assests/js/three.min.js"></script>
+        <script src="assests/js/OrbitControls.js"></script>
+        <script src="assests/js/viewer.js"></script>
+        <script src="assests/js/dat.gui.js" type="text/javascript"></script>
 
-    <div id="debugger">
-        <table id="debugTable" style="display:inline"></table>
-    </div>
-    <div id="bottom-menu">
-        <input type="checkbox" id="debugActive" onclick="toggleDebug()">
-        <label for="debugActive">debug</label>
-        <input type="checkbox" id="raycastingActive" onclick="toggleRaycasting()">
-        <label for="raycastingActive">raycasting</label>
-        <input type="checkbox" id="orthoActive" onclick="toggleOrtho()">
-        <label for="orthoActive">ortho</label>
-    </div>
+        <script>
+            // VIEWER //
+            let camera, perspectiveCamera, orthoCamera;
+            let scene, renderer, controls;
 
-    <script>
-			// VIEWER //
-			let camera, orthoCamera, perspectiveCamera;
-			let scene, renderer, controls;
+            // GUI //
+            let menu;
+            let rotation = false;
 
-			// GUI //
-			let menu;
-			let rotation = false;
-			let colorHistory;
+            // MATERIALS //
+            let material, wireframeMaterial;
 
-			// MATERIALS //
-			let material, wireframeMaterial;
-
-			// RAYCASTING //
-			let raycasting = false;
-			let raycaster = new THREE.Raycaster();
-			let mouse = new THREE.Vector2(), INTERSECTED;
+            // MOUSE //
+            let mouse = new THREE.Vector2()
             
             // DYNAMO GEOMETRY
-			let nodeGeomGroups = [];
-			let activeNodes = [];
+            let nodeGeomGroups = [];
+            let activeNodes = [];
 
-			// RENDER //
-			init();
-			render();
-    </script>
-</body>
+            // RENDER //
+            init();
+            render();
+        </script>
+    </body>
 </html>
