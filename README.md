@@ -5,6 +5,10 @@ DynamoViewport is a [Dynamo](https://github.com/DynamoDS/Dynamo) view extension 
 
 ![IMG](https://github.com/alfarok/DynamoViewport/blob/CEF_Embedded/images/DynamoViewportExample.JPG?raw=true)
 
+![IMG](https://github.com/alfarok/DynamoViewport/blob/master/images/SurfaceExample.JPG?raw=true)
+
+![IMG](https://github.com/alfarok/DynamoViewport/blob/master/images/ReplicationExample.JPG?raw=true)
+
 ![IMG](https://github.com/alfarok/DynamoViewport/blob/CEF_Embedded/images/DynamoViewportEmbedded.gif?raw=true)
 
 ### CEF Sharp
