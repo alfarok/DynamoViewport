@@ -18,7 +18,7 @@ Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering wa
 ### Building/Installing Viewport
 - Clone repo
 - Build against x64 architecture (will fail if not specified)
-- This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder.  This folder is also copied to `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Core\2.0\packages` (Add/Replace with `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Revit\2.0\packages` to copy in postbuild to Revit)
+- This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder.  An attempt is also made to copy this package folder to `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Core\2.2\packages` and will cause a build error if this path is not present.  You can upgrade accordingly by modifying [this line](https://github.com/alfarok/DynamoViewport/blob/CEF_Embedded/src/ViewportViewExtension/ViewportViewExtension/ViewportViewExtension.csproj#L217). You can also add/replace this with `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Revit\2.2\packages` to copy the package to your Revit packages as well.
 
 ### Running Dynamo
 - Run
