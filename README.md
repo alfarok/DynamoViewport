@@ -1,5 +1,5 @@
 # DynamoViewport
-DynamoViewport is a Dynamo view extension that instantiates a CEF browser window. The browser runs a three.js scene that displays Dynamo geometry via the render package data.  This project began as an experiment originally researched during a 2017 recharge sprint.  It is a WIP repo in early exploratory development.  Feel free to fork and make pull requests!
+DynamoViewport is a [Dynamo](https://github.com/DynamoDS/Dynamo) view extension that instantiates a [CEF](https://bitbucket.org/chromiumembedded/cef) browser window. The browser runs a [three.js](https://github.com/mrdoob/three.js/) scene that displays Dynamo geometry via the render package data.  This project began as an experiment originally researched during a 2017 recharge sprint.  It is a WIP repo in early exploratory development.  Feel free to fork and make pull requests!
 
 [Viewport Demo Video](https://youtu.be/qXHMFWbzC-0)
 
