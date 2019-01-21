@@ -7,7 +7,7 @@ DynamoViewport is a Dynamo view extension that instantiates a CEF browser window
 
 ![IMG](https://github.com/alfarok/DynamoViewport/blob/CEF_Embedded/images/DynamoViewportEmbedded.gif?raw=true)
 
-### Building Dynamo
+### CEF Sharp
 CEF is either initialized by 
 - DynamoCore in DynamoSandbox
 - Revit in Dynamo for Revit 2020+
