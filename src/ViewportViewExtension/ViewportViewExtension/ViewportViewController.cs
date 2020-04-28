@@ -115,7 +115,7 @@ namespace ViewportViewExtension
         //if the window is resized toggle visibility of browser to force redraw
         private void DynamoWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var libraryViewColumn = dynamoWindow.FindName("LibraryViewColumn") as ColumnDefinition;
+            var libraryViewColumn = dynamoWindow.FindName("LeftExtensionsViewColumn") as ColumnDefinition;
             libraryViewColumn.MaxWidth = e.NewSize.Width - 50; // TODO - cleanup
             browser.InvalidateVisual();
         }
@@ -166,7 +166,7 @@ namespace ViewportViewExtension
         /// <returns>LibraryView control</returns>
         internal ViewportView AddViewportView()
         {
-            var libraryViewColumn = dynamoWindow.FindName("LibraryViewColumn") as ColumnDefinition;
+            var libraryViewColumn = dynamoWindow.FindName("LeftExtensionsViewColumn") as ColumnDefinition;
             libraryViewColumn.MaxWidth = dynamoWindow.ActualWidth - 50; // TODO - cleanup
 
             var model = new ViewportWindowViewModel(this.viewLoadedParams, this.address);

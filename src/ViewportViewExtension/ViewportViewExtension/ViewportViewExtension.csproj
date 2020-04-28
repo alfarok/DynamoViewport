@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\CefSharp.Wpf.65.0.1\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.65.0.1\build\CefSharp.Wpf.props')" />
   <Import Project="..\packages\CefSharp.Common.65.0.1\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.65.0.1\build\CefSharp.Common.props')" />
@@ -213,8 +213,7 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)Resources" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y /E
 xcopy "$(ProjectDir)bin\x64\Debug\ViewportViewExtension.dll" "$(ProjectDir)DynamoPackage\Viewport\bin" /Y
-xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y
-xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Core\2.2\packages" /Y /E</PostBuildEvent>
+xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
