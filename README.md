@@ -21,7 +21,7 @@ Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering wa
 
 ### Build/Install/Run Viewport
 - Clone repo
-- Build against x64 architecture (will fail if not specified)
+- Build the solution using Visual Studio or MSBuild
 - This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder. 
     - This `Viewport` folder should be copied to the appropriate Dynamo packages folder on your system or
     - The package can be automatically coped by uncommenting and modifying [this post-build step](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/ViewportViewExtension.csproj#L219), note the difference between copying to the Dynamo Core packages location versus Dynamo Revit
