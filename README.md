@@ -19,17 +19,13 @@ CEF is either initialized by
 
 Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initiatization in Dynamo 1.3.X and older
 
-### Building/Installing Viewport
+### Build/Install/Run Viewport
 - Clone repo
 - Build against x64 architecture (will fail if not specified)
-- This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder.  An attempt is also made to copy this package folder to `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Core\2.2\packages` and will cause a build error if this path is not present.  You can upgrade accordingly by modifying [this line](https://github.com/alfarok/DynamoViewport/blob/CEF_Embedded/src/ViewportViewExtension/ViewportViewExtension/ViewportViewExtension.csproj#L217). You can also add/replace this with `C:\Users\USERNAME\AppData\Roaming\Dynamo\Dynamo Revit\2.2\packages` to copy the package to your Revit packages as well.
-
-### Running Dynamo
-- Run
-`C:\..\REPO_LOCATION\Dynamo\bin\AnyCPU\Debug\DynamoSandbox.exe`
-
-### Running Viewport
-- From the main Dynamo toolbar View -> Launch Viewport
+- This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder. 
+    - This `Viewport` folder should be copied to the appropriate Dynamo packages folder on your system or
+    - The package can be automatically coped by uncommenting and modifying [this post-build step](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/ViewportViewExtension.csproj#L219),note the difference between copying to the Dynamo Core packages location versus Dynamo Revit
+- If built and copied successfully the `Launch Viewport` menu option should appear under the `View` tab on the main Dynamo toolbar
 
 ### Debugging
 `http://localhost:8088/`
