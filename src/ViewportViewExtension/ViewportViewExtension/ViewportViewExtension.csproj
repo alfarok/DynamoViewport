@@ -7,7 +7,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProjectGuid>{E5511114-3BE5-4EC3-99CB-B9BDD0D37E3C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -211,9 +211,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)Resources" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y /E
-xcopy "$(ProjectDir)bin\x64\Debug\ViewportViewExtension.dll" "$(ProjectDir)DynamoPackage\Viewport\bin" /Y
-xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)Resources" "$(ProjectDir)DynamoPackage\Viewport\extra\" /Y /E
+xcopy "$(ProjectDir)bin\x64\Debug\ViewportViewExtension.dll" "$(ProjectDir)DynamoPackage\Viewport\bin\" /Y
+xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra\" /Y</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
