@@ -17,7 +17,7 @@ CEF is either initialized by
 - Revit in Dynamo for Revit 2020+
 - Possibly another host application or plugin that is using CEF in the same process
 
-Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initiatization in Dynamo 1.3.X and older
+Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initiatization in Dynamo 1.3.X and older.  The master branch is currently built against DynamoCore v2.3+, for legacy core support see additional branches.
 
 ### Build/Install/Run Viewport
 - Clone repo
