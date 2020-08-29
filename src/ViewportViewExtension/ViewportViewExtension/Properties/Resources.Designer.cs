@@ -19,7 +19,7 @@ namespace ViewportViewExtension.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -202,20 +202,20 @@ namespace ViewportViewExtension.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html lang=&quot;en&quot;&gt;
-        ///&lt;body&gt;
-        ///    &lt;head&gt;
-        ///        &lt;meta charset=&quot;utf-8&quot;&gt;
-        ///        &lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;
-        ///        &lt;div id=&quot;gui-container&quot;&gt;&lt;/div&gt;
-        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///        &lt;head&gt;
+        ///            &lt;meta charset=&quot;utf-8&quot;&gt;
+        ///            &lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;
+        ///            &lt;div id=&quot;gui-container&quot;&gt;&lt;/div&gt;
+        ///        &lt;/head&gt;
         ///
-        ///    &lt;script src=&quot;assests/js/three.min.js&quot;&gt;&lt;/script&gt;
-        ///    &lt;script src=&quot;assests/js/OrbitControls.js&quot;&gt;&lt;/script&gt;
-        ///    &lt;script src=&quot;assests/js/viewer.js&quot;&gt;&lt;/script&gt;
-        ///    &lt;script src=&quot;assests/js/dat.gui.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+        ///        &lt;script src=&quot;assests/js/three.min.js&quot;&gt;&lt;/script&gt;
+        ///        &lt;script src=&quot;assests/js/OrbitControls.js&quot;&gt;&lt;/script&gt;
+        ///        &lt;script src=&quot;assests/js/viewer.js&quot;&gt;&lt;/script&gt;
+        ///        &lt;script src=&quot;assests/js/dat.gui.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
         ///
-        ///    &lt;div id=&quot;debugger&quot;&gt;
-        ///        &lt;table id=&quot;debugTable&quot; style=&quot;display:inline&quot;&gt;&lt;/ta [rest of string was truncated]&quot;;.
+        ///        &lt;script&gt;
+        ///            // VIEWER //        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string index_html {
             get {
@@ -235,7 +235,7 @@ namespace ViewportViewExtension.Properties {
         ///
         ///#debugger {
         ///    position: fixed;
-        ///    left: 0;
+        ///    right: 0;
         ///    padding: 10px;
         ///}
         ///
@@ -248,7 +248,7 @@ namespace ViewportViewExtension.Properties {
         ///
         ///#gui-container {
         ///    position: fixed;
-        ///    right: 0;
+        ///    left: 0;
         ///    top: 0;
         ///    z-index: 0;
         ///}.
