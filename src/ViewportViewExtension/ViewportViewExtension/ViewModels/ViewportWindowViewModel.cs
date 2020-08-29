@@ -134,7 +134,7 @@ namespace ViewportViewExtension.ViewModels
         private void CurrentWorkspaceModel_UpdateViewportGeometry(NodeModel nodeModel, RenderPackageCache packages)
         {
             PackageContent = packages;
-            DisplayPreview = nodeModel.ShouldDisplayPreview;
+            DisplayPreview = nodeModel.IsVisible;
             NodeGuid = nodeModel.GUID.ToString();
             TransactionType = "update";
             RaisePropertyChanged("RenderData");

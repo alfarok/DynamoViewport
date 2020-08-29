@@ -262,8 +262,8 @@ function renderDynamoMesh(groupData) {
         for (let i = 0; i < vertices.length; i++)
         {
             let geometry = new THREE.BufferGeometry();
-            geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices[i], 3));
-            geometry.addAttribute( 'normal', new THREE.Float32BufferAttribute(normals[i], 3));
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices[i], 3));
+            geometry.setAttribute( 'normal', new THREE.Float32BufferAttribute(normals[i], 3));
             let mesh = new THREE.Mesh(geometry, material);
             let wireframe = new THREE.Mesh(geometry, wireframeMaterial);
             mesh.name = "meshGeometry";
@@ -338,5 +338,5 @@ function renderDynamoMesh(groupData) {
     nodeGeomGroups.push(nodeGeomGroup);
     scene.add(nodeGeomGroup);
 
-    console.log(scene);
+    //console.log(scene);
 }
