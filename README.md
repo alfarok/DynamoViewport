@@ -17,14 +17,14 @@ CEF is either initialized by
 - Revit in Dynamo for Revit 2020+
 - Possibly another host application or plugin that is using CEF in the same process
 
-Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initiatization in Dynamo 1.3.X and older.  The master branch is currently built against DynamoCore v2.3+, for legacy core support see additional branches.
+Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initiatization in Dynamo 1.3.X and older.  The master branch is currently built against DynamoCore v2.7+, for legacy core support see additional branches.  The latest Dynamo NuGet dependency specs can be found [here](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/packages.config#L8).
 
 ### Build/Install/Run Viewport
 - Clone repo
 - Build the solution using Visual Studio or MSBuild
 - This should populate the `C:\..\DynamoViewport\src\ViewportViewExtension\ViewportViewExtension\DynamoPackage\Viewport` package folder. 
-    - This `Viewport` folder should be copied to the appropriate Dynamo packages folder on your system or
-    - The package can be automatically coped by uncommenting and modifying [this post-build step](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/ViewportViewExtension.csproj#L219), note the difference between copying to the Dynamo Core packages location versus Dynamo Revit
+    - This `Viewport` folder should be copied to the appropriate Dynamo packages folder on your system manually, or
+    - The package can be automatically coped by modifying [this post-build step](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/ViewportViewExtension.csproj#L218), update the Dynamo Core version in the path accordingly
 - If built and copied successfully the `Launch Viewport` menu option should appear under the `View` tab on the main Dynamo toolbar
 
 ### Debugging
