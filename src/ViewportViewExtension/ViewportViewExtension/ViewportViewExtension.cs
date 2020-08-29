@@ -37,7 +37,7 @@ namespace ViewportViewExtension
             {
                 var viewLoadedParams = p;
                 var controller = new ViewportViewController(p.DynamoWindow, p.CommandExecutive, viewLoadedParams, PackagePath);
-                controller.AddViewportView();
+                controller.AddViewportToExtensionsPanel(this, p);
             };
 
             // add the menu item to our loaded parameters

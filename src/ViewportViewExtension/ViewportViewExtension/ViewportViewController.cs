@@ -126,20 +126,16 @@ namespace ViewportViewExtension
         /// Creates and add the library view to the WPF visual tree
         /// </summary>
         /// <returns>LibraryView control</returns>
-        internal ViewportView AddViewportView()
+        internal ViewportView AddViewportToExtensionsPanel(IViewExtension ext, ViewLoadedParams p)
         {
-            var libraryViewColumn = dynamoWindow.FindName("LeftExtensionsViewColumn") as ColumnDefinition;
-            libraryViewColumn.MaxWidth = dynamoWindow.ActualWidth - 50; // TODO - cleanup
-
             var model = new ViewportWindowViewModel(this.viewLoadedParams, this.address);
             var view = new ViewportView(model); // This crashes
 
             var browser = view.Browser;
             this.browser = browser;
 
-            var sidebarGrid = dynamoWindow.FindName("sidebarGrid") as Grid;
-            sidebarGrid.Children.Clear(); // Clear library contents
-            sidebarGrid.Children.Add(view);
+            p.AddToExtensionsSideBar(ext, view);
+
             browser.RegisterAsyncJsObject("controller", this);
 
             view.Loaded += OnViewportViewLoaded;
