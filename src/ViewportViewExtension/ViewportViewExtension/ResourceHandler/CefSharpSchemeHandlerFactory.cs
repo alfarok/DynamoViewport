@@ -24,7 +24,6 @@ namespace ViewportViewExtension
                 { "/assets/js/three.min.js", Resources.assets_js_three_min_js },
                 { "/assets/js/OrbitControls.js", Resources.assets_js_OrbitControls_js },
                 { "/assets/js/OrbitControls.js", Resources.assets_js_Projector_js },
-                { "/assets/js/CanvasRenderer.js", Resources.assets_js_CanvasRenderer_js },
                 { "/assets/js/dat.gui.js", Resources.assets_dat_gui_js },
                 { "/assets/js/viewer.js", Resources.assets_viewer_js }
             };

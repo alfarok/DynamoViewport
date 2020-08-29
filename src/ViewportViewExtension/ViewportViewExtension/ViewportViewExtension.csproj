@@ -186,7 +186,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\assests\js\OrbitControls.js" />
     <EmbeddedResource Include="Resources\assests\js\three.min.js" />
-    <EmbeddedResource Include="Resources\assests\js\CanvasRenderer.js" />
     <EmbeddedResource Include="Resources\assests\js\Projector.js" />
     <EmbeddedResource Include="Resources\assests\js\dat.gui.js" />
     <EmbeddedResource Include="Resources\assests\js\viewer.js" />

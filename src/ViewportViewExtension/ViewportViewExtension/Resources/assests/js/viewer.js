@@ -160,6 +160,7 @@ function buildSceneHelpers() {
 
 // Hide/Show Functions //
 
+// TODO: this resets when a subsequent render() action is invoked
 function toggleShader() {
     scene.traverse (function (object) {
         if (object.name === 'meshGeometry') { 
@@ -169,6 +170,7 @@ function toggleShader() {
     });
 }
 
+// TODO: this resets when a subsequent render() action is invoked
 function toggleWireframe() {
     scene.traverse (function (object) {
         if (object.name === 'wireframeGeometry') { 

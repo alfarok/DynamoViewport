@@ -86,34 +86,6 @@ namespace ViewportViewExtension.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to /**
-        /// * @author mrdoob / http://mrdoob.com/
-        /// */
-        ///
-        ///THREE.SpriteCanvasMaterial = function ( parameters ) {
-        ///
-        ///	THREE.Material.call( this );
-        ///
-        ///	this.type = &apos;SpriteCanvasMaterial&apos;;
-        ///
-        ///	this.color = new THREE.Color( 0xffffff );
-        ///	this.program = function () {};
-        ///
-        ///	this.setValues( parameters );
-        ///
-        ///};
-        ///
-        ///THREE.SpriteCanvasMaterial.prototype = Object.create( THREE.Material.prototype );
-        ///THREE.SpriteCanvasMaterial.prototype.constructor = THREE.SpriteCanvasMaterial;
-        ///THREE.SpriteCanvasMaterial.prototype.isSpriteCa [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string assets_js_CanvasRenderer_js {
-            get {
-                return ResourceManager.GetString("assets_js_CanvasRenderer_js", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to /**
         /// * @author qiao / https://github.com/qiao
         /// * @author mrdoob / http://mrdoob.com
         /// * @author alteredq / http://alteredqualia.com/
@@ -215,7 +187,8 @@ namespace ViewportViewExtension.Properties {
         ///        &lt;script src=&quot;assests/js/dat.gui.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
         ///
         ///        &lt;script&gt;
-        ///            // VIEWER //        /// [rest of string was truncated]&quot;;.
+        ///            // VIEWER //
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string index_html {
             get {
