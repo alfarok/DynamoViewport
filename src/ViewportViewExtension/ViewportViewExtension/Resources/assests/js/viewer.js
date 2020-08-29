@@ -168,6 +168,10 @@ function toggleShader() {
             else { object.visible = false; } 
         }
     });
+
+    // Update visibility status
+    if(materialVisibility == false) { materialVisibility = true; }
+    else {materialVisibility = false; }
 }
 
 // TODO: this resets when a subsequent render() action is invoked
@@ -178,6 +182,10 @@ function toggleWireframe() {
             else { object.visible = false; } 
         }
     });
+
+    // Update visibility status
+    if(wireframeMaterialVisibility == false) { wireframeMaterialVisibility = true; }
+    else { wireframeMaterialVisibility = false; }
 }
 
 function toggleGrid() {
@@ -260,6 +268,13 @@ function renderDynamoMesh(groupData) {
             var wireframe = new THREE.Mesh(geometry, wireframeMaterial);
             mesh.name = "meshGeometry";
             wireframe.name = "wireframeGeometry";
+
+            // check mesh shader visibility from UI
+            if (materialVisibility == false) { mesh.visible = false; }
+
+            // check mesh wireframe visibility from UI
+            if (wireframeMaterialVisibility == false) { wireframe.visible = false; }
+
             nodeGeomGroup.add(mesh);
             nodeGeomGroup.add(wireframe);
         }     
