@@ -30,14 +30,23 @@ namespace ViewportViewExtension
         public void Loaded(ViewLoadedParams p)
         {
             // Specify the text displayed on the menu item
-            viewportMenuItem = new MenuItem { Header = "Launch Viewport" };
+            viewportMenuItem = new MenuItem { Header = "Launch Viewport", IsCheckable = true, IsChecked = false };
 
             // Define the behavior when menu item is clicked
             viewportMenuItem.Click += (sender, args) =>
             {
                 var viewLoadedParams = p;
-                var controller = new ViewportViewController(p.DynamoWindow, p.CommandExecutive, viewLoadedParams, PackagePath);
-                controller.AddViewportToExtensionsPanel(this, p);
+
+                if(viewportMenuItem.IsChecked)
+                {
+                    var controller = new ViewportViewController(p.DynamoWindow, p.CommandExecutive, viewLoadedParams, PackagePath);
+                    controller.AddViewportToExtensionsPanel(this, p);
+                }
+                else
+                {
+                    p.CloseExtensioninInSideBar(this);
+                }
+               
             };
 
             // add the menu item to our loaded parameters
