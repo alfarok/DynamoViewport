@@ -225,7 +225,7 @@ function renderDynamoMesh(groupData) {
         else {
             group.visible = false;
         }
-        //return;
+        return;
     }
 
     // TODO: Dynamic mesh - should update verts not remove

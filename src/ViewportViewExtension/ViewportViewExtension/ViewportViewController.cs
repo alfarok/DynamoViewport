@@ -145,8 +145,9 @@ namespace ViewportViewExtension
         {
             var viewportView = sender as ViewportView;
 #if DEBUG
-            var browser = viewportView;
-            //browser.ConsoleMessage += OnBrowserConsoleMessage;
+            // Debug console
+            this.browser.ShowDevTools();
+            this.browser.ConsoleMessage += OnBrowserConsoleMessage;
 #endif
         }
 
