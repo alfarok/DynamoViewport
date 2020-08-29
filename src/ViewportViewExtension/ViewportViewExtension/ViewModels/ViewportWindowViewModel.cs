@@ -54,7 +54,7 @@ namespace ViewportViewExtension.ViewModels
 
         public string getRenderPackages()
         {
-            // javascript function
+            // Javascript function
             string output = "renderDynamoMesh(";
 
             List<double[]> verts = new List<double[]>();
@@ -99,10 +99,10 @@ namespace ViewportViewExtension.ViewModels
             p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodeAdded;
             p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodeRemoved;
 
-            // TODO this could be dangerous if called in custom node ws
+            // TODO: this could be dangerous if called in custom node ws
             HomeWorkspaceModel currentWS = readyParams.CurrentWorkspaceModel as HomeWorkspaceModel;
 
-            // TODO opening/changing WS needs more attention
+            // TODO: opening/changing WS needs more attention
             // Register all nodes that currently exist in the WS
             foreach(NodeModel node in currentWS.Nodes)
             {

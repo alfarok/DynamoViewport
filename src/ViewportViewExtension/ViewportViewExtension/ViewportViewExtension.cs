@@ -49,7 +49,7 @@ namespace ViewportViewExtension
                
             };
 
-            // add the menu item to our loaded parameters
+            // Add the menu item to our loaded parameters
             p.AddMenuItem(MenuBarType.View, viewportMenuItem);
         }
 

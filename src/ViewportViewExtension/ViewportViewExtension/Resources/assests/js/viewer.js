@@ -92,7 +92,7 @@ function init() {
 
 function render(time) {
 
-    // TODO - this is inefficient but just a sample of animation
+    // TODO: this is inefficient but just a sample of animation
     if(menu.Speed > 0)
     {
         scene.traverse (function (object) {
@@ -121,7 +121,7 @@ function onMouseMove( event ) {
 }
 
 function onWindowResize() {
-    // TODO this should update for both cameras
+    // TODO: this should update for both cameras
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -187,7 +187,7 @@ function toggleAxes() {
     else { axes.visible = true; }
 }
 
-// TODO this needs serious cleanup - possible to handle most of this on the C# side?
+// TODO: this needs serious cleanup - possible to handle most of this on the C# side?
 // It also seems there is a bug or timing issue that gets geometry cache out of sync?
 // Helper function to build THREE objects from render package json
 function renderDynamoMesh(groupData) {
@@ -215,7 +215,7 @@ function renderDynamoMesh(groupData) {
         //return;
     }
 
-    // TODO Dynamic mesh - should update verts not remove
+    // TODO: Dynamic mesh - should update verts not remove
     // if object already exists remove it and redraw
     if (activeNodes.indexOf(name) >= 0) {
         console.log("existing object updated");
@@ -260,7 +260,7 @@ function renderDynamoMesh(groupData) {
         }     
     }
     
-    // TODO why do small L-shaped lines initially render for points?
+    // TODO: why do small L-shaped lines initially render for points?
     // LINES from render package
     var lines = groupData.lines;
 

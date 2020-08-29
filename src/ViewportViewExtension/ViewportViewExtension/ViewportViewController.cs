@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 using CefSharp;
 using CefSharp.Wpf;
 using Dynamo.Extensions;
@@ -74,13 +73,9 @@ namespace ViewportViewExtension
         private Window dynamoWindow;
         private ViewLoadedParams viewLoadedParams;
         private string address;
-        private ICommandExecutive commandExecutive;
         private DynamoViewModel dynamoViewModel;
         private IDisposable observer;
         private ChromiumWebBrowser browser;
-
-        // TODO remove this when we can control the library state from Dynamo more precisely.
-        private bool disableObserver = false;
 
         /// <summary>
         /// Creates ViewportViewController
@@ -94,29 +89,17 @@ namespace ViewportViewExtension
             this.address = address;
             dynamoViewModel = dynamoView.DataContext as DynamoViewModel;
 
-            this.commandExecutive = commandExecutive;
-
             dynamoWindow.StateChanged += DynamoWindowStateChanged;
             dynamoWindow.SizeChanged += DynamoWindow_SizeChanged;
         }
 
-        //if the window is resized toggle visibility of browser to force redraw
+        // If the window is resized toggle visibility of browser to force redraw
         private void DynamoWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var libraryViewColumn = dynamoWindow.FindName("LeftExtensionsViewColumn") as ColumnDefinition;
-            libraryViewColumn.MaxWidth = e.NewSize.Width - 50; // TODO - cleanup
             browser.InvalidateVisual();
         }
 
-        private void toggleBrowserVisibility(ChromiumWebBrowser browser)
-        {
-            if (browser != null)
-            {
-                browser.InvalidateVisual();
-            }
-        }
-
-        //if the dynamo window is minimized and then restored, force a layout update.
+        // If the dynamo window is minimized and then restored, force a layout update.
         private void DynamoWindowStateChanged(object sender, EventArgs e)
         {
             browser.InvalidateVisual();
@@ -129,7 +112,7 @@ namespace ViewportViewExtension
         internal ViewportView AddViewportToExtensionsPanel(IViewExtension ext, ViewLoadedParams p)
         {
             var model = new ViewportWindowViewModel(this.viewLoadedParams, this.address);
-            var view = new ViewportView(model); // This crashes
+            var view = new ViewportView(model);
 
             var browser = view.Browser;
             this.browser = browser;
@@ -152,7 +135,7 @@ namespace ViewportViewExtension
             this.dynamoViewModel.Model.Logger.LogError(e.ErrorText);
         }
 
-        //if the browser window itself is resized, toggle visibility to force redraw.
+        // If the browser window itself is resized, toggle visibility to force redraw.
         private void Browser_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             browser.InvalidateVisual();

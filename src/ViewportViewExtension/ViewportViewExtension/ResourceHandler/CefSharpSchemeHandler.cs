@@ -47,9 +47,9 @@ namespace ViewportViewExtension
                     }
                     else
                     {
-                        //Reset the stream position to 0 so the stream can be copied into the underlying unmanaged buffer
+                        // Reset the stream position to 0 so the stream can be copied into the underlying unmanaged buffer
                         stream.Position = 0;
-                        //Populate the response values - No longer need to implement GetResponseHeaders (unless you need to perform a redirect)
+                        // Populate the response values
                         ResponseLength = stream.Length;
                         MimeType = "text/html";
                         StatusCode = (int)HttpStatusCode.OK;
