@@ -63,7 +63,7 @@ function init() {
     let animateFolder = gui.addFolder('Animate');
     let toggleFolder = gui.addFolder('Hide/Show');
     //gui.add(menu, 'message');
-    animateFolder.add(menu, 'Speed', -0.001, 0.001);
+    animateFolder.add(menu, 'Speed', 0.000, 0.001);
     let shaderColorController = colorFolder.addColor(menu, 'ShaderColor');
     shaderColorController.onChange( function( colorValue ) {
         colorValue=colorValue.replace( '#','0x' );
