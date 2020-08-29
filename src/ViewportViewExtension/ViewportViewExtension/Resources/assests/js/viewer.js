@@ -62,22 +62,25 @@ function init() {
     let colorFolder = gui.addFolder('Style');
     let animateFolder = gui.addFolder('Animate');
     let toggleFolder = gui.addFolder('Hide/Show');
-    //gui.add(menu, 'message');
+
     animateFolder.add(menu, 'Speed', 0.000, 0.001);
     let shaderColorController = colorFolder.addColor(menu, 'ShaderColor');
     shaderColorController.onChange( function( colorValue ) {
-        colorValue=colorValue.replace( '#','0x' );
-        material.color.setHex(colorValue);
+        newColorValue=colorValue.replace( '#','0x' );
+        material.color.setHex(newColorValue);
+        this.ShaderColor = colorValue;
     });
     let wireframeColorController = colorFolder.addColor(menu, 'WireframeColor');
     wireframeColorController.onChange( function( colorValue ) {
-        colorValue=colorValue.replace( '#','0x' );
-        wireframeMaterial.color.setHex(colorValue);
+        newColorValue=colorValue.replace( '#','0x' );
+        wireframeMaterial.color.setHex(newColorValue);
+        this.WireframeColor =  colorValue;
     });
     let backgroundColorController = colorFolder.addColor(menu, 'BackgroundColor');
     backgroundColorController.onChange( function( colorValue ) {
         document.body.style.background = colorValue;
     });
+
     toggleFolder.add(menu, 'Shader');
     toggleFolder.add(menu, 'Wireframe');
     toggleFolder.add(menu, 'Grid');
