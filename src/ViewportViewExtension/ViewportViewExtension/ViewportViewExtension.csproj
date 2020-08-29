@@ -213,11 +213,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-      xcopy "$(ProjectDir)Resources" "$(ProjectDir)DynamoPackage\Viewport\extra\" /Y /E
-      xcopy "$(ProjectDir)bin\x64\Debug\ViewportViewExtension.dll" "$(ProjectDir)DynamoPackage\Viewport\bin\" /Y
-      xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra\" /Y
-      <!-- xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Core\2.3\packages\" /Y /E --><!-- xcopy "$(ProjectDir)DynamoPackage" "$(AppData)\Dynamo\Dynamo Revit\2.3\packages\" /Y /E --></PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)Resources" "$(ProjectDir)DynamoPackage\Viewport\extra\" /Y /E
+xcopy "$(ProjectDir)bin\x64\Debug\ViewportViewExtension.dll" "$(ProjectDir)DynamoPackage\Viewport\bin\" /Y
+xcopy "$(ProjectDir)Viewport_ViewExtensionDefinition.xml" "$(ProjectDir)DynamoPackage\Viewport\extra\" /Y
+xcopy "$(ProjectDir)DynamoPackage\Viewport" "$(AppData)\Dynamo\Dynamo Core\2.9\packages\Viewport" /Y /E /I
+</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
