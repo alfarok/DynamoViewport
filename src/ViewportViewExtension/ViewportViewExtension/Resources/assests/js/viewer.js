@@ -147,7 +147,7 @@ function buildSceneHelpers() {
         gridHelper.vertices.push(new THREE.Vector3(i, 0, size));
     }
 
-    let gridLines = new THREE.Line(gridHelper, lineMaterial, THREE.LinePieces);
+    let gridLines = new THREE.LineSegments(gridHelper, lineMaterial, THREE.LinePieces);
     gridLines.name = "grid";
     scene.add(gridLines);
 
