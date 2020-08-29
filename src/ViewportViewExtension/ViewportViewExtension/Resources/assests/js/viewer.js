@@ -1,7 +1,7 @@
 // Viewport Settings
 function init() {
     // THREE JS //
-    var frustumSize = 80;
+    let frustumSize = 80;
     let aspect = window.innerWidth / window.innerHeight;
     perspectiveCamera = new THREE.PerspectiveCamera(45, aspect, 1, 10000);
     orthoCamera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 1, 2000 );
@@ -139,7 +139,7 @@ function buildSceneHelpers() {
     let gridHelper = new THREE.Geometry();
     let lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1 });
 
-    for (var i = -size; i <= size; i += step) {
+    for (let i = -size; i <= size; i += step) {
         gridHelper.vertices.push(new THREE.Vector3(-size, 0, i));
         gridHelper.vertices.push(new THREE.Vector3(size, 0, i));
 
@@ -204,13 +204,13 @@ function toggleAxes() {
 // It also seems there is a bug or timing issue that gets geometry cache out of sync?
 // Helper function to build THREE objects from render package json
 function renderDynamoMesh(groupData) {
-    var name = groupData.name;
-    var status = groupData.transactionType;
+    let name = groupData.name;
+    let status = groupData.transactionType;
 
     if (status == "remove") {
         console.log("existing object removed");
         // need to get ALL objects with this name
-        var group = scene.getObjectByName(name);
+        let group = scene.getObjectByName(name);
         scene.remove(group);
         nodeGeomGroups.pop(group);
         activeNodes.pop(name);
@@ -218,7 +218,7 @@ function renderDynamoMesh(groupData) {
     }
     else if (status == "togglePreview") {
         console.log("hide/show object preview");
-        var group = scene.getObjectByName(name);
+        let group = scene.getObjectByName(name);
         if (groupData.displayPreview == true) {
             group.visible = true;
         }
@@ -232,7 +232,7 @@ function renderDynamoMesh(groupData) {
     // if object already exists remove it and redraw
     if (activeNodes.indexOf(name) >= 0) {
         console.log("existing object updated");
-        var group = scene.getObjectByName(name);
+        let group = scene.getObjectByName(name);
         scene.remove(group);
         nodeGeomGroups.pop(group);
     }
@@ -247,25 +247,25 @@ function renderDynamoMesh(groupData) {
     // Groups make working with sets of objects syntactically clearer
     // but are almost indentical to a traditional object.
     // Here each group contains all the geometry for a single active node.
-    var nodeGeomGroup = new THREE.Group();
+    let nodeGeomGroup = new THREE.Group();
     nodeGeomGroup.name = name;
     
     // MESHES from render package
     // lists (each mesh) of lists (each meshes vertices/faces)
-    var vertices = groupData.vertices;
-    var normals = groupData.normals;
+    let vertices = groupData.vertices;
+    let normals = groupData.normals;
 
     // verify groupData contains mesh objects
     if (vertices.length > 0 /*&& faces.length > 0*/)
     {
         // for each mesh construct meshObject and add to group
-        for (var i = 0; i < vertices.length; i++)
+        for (let i = 0; i < vertices.length; i++)
         {
-            var geometry = new THREE.BufferGeometry();
+            let geometry = new THREE.BufferGeometry();
             geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices[i], 3));
             geometry.addAttribute( 'normal', new THREE.Float32BufferAttribute(normals[i], 3));
-            var mesh = new THREE.Mesh(geometry, material);
-            var wireframe = new THREE.Mesh(geometry, wireframeMaterial);
+            let mesh = new THREE.Mesh(geometry, material);
+            let wireframe = new THREE.Mesh(geometry, wireframeMaterial);
             mesh.name = "meshGeometry";
             wireframe.name = "wireframeGeometry";
 
@@ -282,49 +282,49 @@ function renderDynamoMesh(groupData) {
     
     // TODO: why do small L-shaped lines initially render for points?
     // LINES from render package
-    var lines = groupData.lines;
+    let lines = groupData.lines;
 
     // verify groupData contains line objects
     if (lines.length > 0)
     {
-        var lineMaterial = new THREE.LineBasicMaterial({
+        let lineMaterial = new THREE.LineBasicMaterial({
             color: 0xffffff,
             linewidth: 10 // doesn't do anything - known issue
         });
 
         // for each line construct lineObject and add to group
-        for (var i = 0; i < lines.length; i++) {
-            var lineGeometry = new THREE.Geometry();
+        for (let i = 0; i < lines.length; i++) {
+            let lineGeometry = new THREE.Geometry();
             lineGeometry.vertices = [];
 
-            for (var j = 0; j < lines[i].length; j += 3) {
+            for (let j = 0; j < lines[i].length; j += 3) {
                 lineGeometry.vertices.push(new THREE.Vector3(lines[i][j], lines[i][j + 1], lines[i][j + 2]));
             }
 
-            var line = new THREE.Line(lineGeometry, lineMaterial);
+            let line = new THREE.Line(lineGeometry, lineMaterial);
             line.name = "lineGeometry";
             nodeGeomGroup.add(line);
         }
     }
 
     // Points from render package
-    var points = groupData.points;
+    let points = groupData.points;
 
     // verify groupData contains line objects
     if (points.length > 0) {
 
-        var pointMaterial = new THREE.PointsMaterial({ color: 0x009eff, size: 5, sizeAttenuation: false, side: THREE.DoubleSide });
+        let pointMaterial = new THREE.PointsMaterial({ color: 0x009eff, size: 5, sizeAttenuation: false, side: THREE.DoubleSide });
 
         // for each point set construct pointObject and add to group
-        for (var i = 0; i < points.length; i++) {
-            var pointGeometry = new THREE.Geometry();
+        for (let i = 0; i < points.length; i++) {
+            let pointGeometry = new THREE.Geometry();
             pointGeometry.vertices = [];
 
-            for (var j = 0; j < points[i].length; j += 3) {
+            for (let j = 0; j < points[i].length; j += 3) {
                 pointGeometry.vertices.push(new THREE.Vector3(points[i][j], points[i][j + 1], points[i][j + 2]));
             }
 
-            var pointCloud = new THREE.Points(pointGeometry, pointMaterial);
+            let pointCloud = new THREE.Points(pointGeometry, pointMaterial);
             pointCloud.name = "pointGeometry";
             nodeGeomGroup.add(pointCloud);
         }
