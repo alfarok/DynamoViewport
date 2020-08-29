@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Controls;
 using Dynamo.Wpf.Extensions;
-using ViewportViewExtension.ViewModels;
 
 namespace ViewportViewExtension
 {

@@ -1,24 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using CefSharp;
 using CefSharp.Wpf;
 using Dynamo.Extensions;
-using Dynamo.Logging;
-using Dynamo.Models;
-using Dynamo.Search;
-using Dynamo.Search.SearchElements;
 using Dynamo.ViewModels;
-using Dynamo.Wpf.Interfaces;
-using Dynamo.Wpf.ViewModels;
 using Dynamo.Wpf.Extensions;
-using Dynamo.Core;
 using ViewportViewExtension.Views;
 using ViewportViewExtension.ViewModels;
 
@@ -135,32 +123,6 @@ namespace ViewportViewExtension
         }
 
         /// <summary>
-        /// Call this method to create a new node in Dynamo canvas.
-        /// </summary>
-        /// <param name="nodeName">Node creation name</param>
-/*
-        public void CreateNode(string nodeName)
-        {
-            dynamoWindow.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                //if the node we're trying to create is a customNode, lets disable the eventObserver.
-                // this will stop the libraryController from refreshing the libraryView on custom node creation.
-                var resultGuid = Guid.Empty;
-                if (Guid.TryParse(nodeName, out resultGuid))
-                {
-                    this.disableObserver = true;
-                }
-                //Create the node of given item name
-                var cmd = new DynamoModel.CreateNodeCommand(Guid.NewGuid().ToString(), nodeName, -1, -1, true, false);
-                commandExecutive.ExecuteCommand(cmd, Guid.NewGuid().ToString(), ViewExtension.ExtensionName);
-                LogEventsToInstrumentation(CreateNodeInstrumentationString, nodeName);
-
-                this.disableObserver = false;
-            }));
-        }
-*/
-
-        /// <summary>
         /// Creates and add the library view to the WPF visual tree
         /// </summary>
         /// <returns>LibraryView control</returns>
@@ -184,19 +146,6 @@ namespace ViewportViewExtension
             browser.SizeChanged += Browser_SizeChanged;
             browser.LoadError += Browser_LoadError;
 
-            // TODO - this was added Fall 2017 due to issues with 
-            // library failing to load due to timing issues. 
-            /*
-                        //wait for the browser to load before setting the resources
-                        browser.LoadingStateChanged += (sender, args) =>
-                        {
-                            //Wait for the Page to finish loading
-                            if (args.IsLoading == false)
-                            {
-                                RegisterResources(browser);
-                            }
-                        };
-            */
             return view;
         }
 

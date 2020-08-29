@@ -38,9 +38,6 @@ namespace ViewportViewExtension.Views
             // When view model is updated call javascript update function
             vm.PropertyChanged += ExecuteJavascript;
 
-            // Center initial viewport window upon launch
-            //WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-
             //ScriptTextBox.KeyDown += new KeyEventHandler(textBoxKeyDown);
         }
 
