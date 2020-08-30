@@ -148,10 +148,15 @@ namespace ViewportViewExtension.ViewModels
 
             if(changedProperty == "IsVisible")
             {
-                TransactionType = "togglePreview";
-                NodeGuid = node.GUID.ToString();
-                DisplayPreview = node.IsVisible;
-                RaisePropertyChanged("RenderData");
+                // TODO: Dynamo events only require this when hiding
+                // show triggers a workspace update which is already captured
+                if(node.IsVisible == false)
+                {
+                    TransactionType = "togglePreview";
+                    NodeGuid = node.GUID.ToString();
+                    DisplayPreview = node.IsVisible;
+                    RaisePropertyChanged("RenderData");
+                }
             }
         }
 

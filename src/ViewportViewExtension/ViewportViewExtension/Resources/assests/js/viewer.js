@@ -88,7 +88,6 @@ function init() {
 
     let GUIContainer = document.getElementById('gui-container');
     GUIContainer.appendChild(gui.domElement);
-    //
 
     window.requestAnimationFrame(render);
 }
@@ -200,65 +199,130 @@ function toggleAxes() {
     else { axes.visible = true; }
 }
 
-// TODO: this needs serious cleanup - possible to handle most of this on the C# side?
-// It also seems there is a bug or timing issue that gets geometry cache out of sync?
 // Helper function to build THREE objects from render package json
 function renderDynamoMesh(groupData) {
+    // JSON data
     let name = groupData.name;
     let status = groupData.transactionType;
-
-    if (status == "remove") {
-        console.log("existing object removed");
-        // need to get ALL objects with this name
-        let group = scene.getObjectByName(name);
-        scene.remove(group);
-        nodeGeomGroups.pop(group);
-        activeNodes.pop(name);
-        return;
-    }
-    else if (status == "togglePreview") {
-        console.log("hide/show object preview");
-        let group = scene.getObjectByName(name);
-        if (groupData.displayPreview == true) {
-            group.visible = true;
-        }
-        else {
-            group.visible = false;
-        }
-        return;
-    }
-
-    // TODO: Dynamic mesh - should update verts not remove
-    // if object already exists remove it and redraw
-    if (activeNodes.indexOf(name) >= 0) {
-        console.log("existing object updated");
-        let group = scene.getObjectByName(name);
-        scene.remove(group);
-        nodeGeomGroups.pop(group);
-    }
-
-    // new object
-    else {
-        console.log("new object added");
-        console.log(name);
-        activeNodes.push(name);
-    }
-
-    // Groups make working with sets of objects syntactically clearer
-    // but are almost indentical to a traditional object.
-    // Here each group contains all the geometry for a single active node.
-    let nodeGeomGroup = new THREE.Group();
-    nodeGeomGroup.name = name;
-    
-    // MESHES from render package
-    // lists (each mesh) of lists (each meshes vertices/faces)
+    let visibility = groupData.displayPreview;
     let vertices = groupData.vertices;
     let normals = groupData.normals;
+    let points = groupData.points;
+    let lines = groupData.lines;
 
-    // verify groupData contains mesh objects
+    // Action based on request status
+    switch(status) {
+        // A Dynamo node has been removed from the graph
+        case "remove":
+            // Remove all object matching the provided groupData.name
+            //console.log("ATTEMPING TO REMOVE: " + name);
+
+            // Track possible duplicate objects in the scene
+            var nodeCount = 0
+
+            // This is not performative but attempts to prevent async objects from accumulating 
+            try {
+                scene.traverse(function(child) {
+                    if (child instanceof THREE.Group){
+                        // If a child matches by name aka GUID remove it
+                        if (child.name === name) {
+                            //console.log("REMOVING: " + name + "-" + nodeCount);
+                            scene.remove(child);
+                            nodeCount += 1
+                        }
+                    }
+                });
+            }
+            catch(err) {
+                //console.log(err)
+            }
+
+            break;
+
+        // A Dynamo nodes display preview has been toggled
+        case "togglePreview":
+            // Remove all object matching the provided groupData.name
+            //console.log("ATTEMPING TO TOGGLE: " + name);
+
+            // Track possible duplicate objects in the scene
+            var nodeCount = 0
+
+            // This is not performative but attempts to prevent async objects from accumulating
+            try {
+                scene.traverse(function(child) {
+                    if (child instanceof THREE.Group){
+                        // If a child matches by name aka GUID remove it
+                        if (child.name === name) {
+                            //console.log("TOGGLING: " + name + "-" + nodeCount);
+                            if (visibility === true) {
+                                child.visible = true;
+                            }
+                            else {
+                                child.visible = false;
+                            }
+                            nodeCount += 1
+                        }
+                    }
+                });
+            }
+            catch(err) {
+                //console.log(err)
+            }
+
+            break;
+
+        // An incoming update could be to create or update existing node geometry
+        case "update":
+            // Remove all object matching the provided groupData.name
+            //console.log("ATTEMPING TO UPDATE: " + name);
+
+            // Track possible duplicate objects in the scene
+            var nodeCount = 0
+
+            // TODO: This try/catch is required due to not being able to traverse the scene after a node is reshown?
+            try {
+                scene.traverse(function(child) {
+                    if (child instanceof THREE.Group){
+                        // If a child matches by name aka GUID remove it
+                        if (child.name === name) {
+                            //console.log("EXISTING/REPLACING: " + name + "-" + nodeCount);
+                            scene.remove(child);
+                            nodeCount += 1
+                        }
+                    }
+                });
+            }
+            catch(err) {
+                //console.log(err)
+            }
+            
+            // Generator a new geometry instance in the scene
+            let nodeGeometry = geometryGenerator(name, vertices, normals, points, lines, visibility);
+            // Add geometry collection to scene
+            scene.add(nodeGeometry);
+
+            break;
+
+        default:
+            // Unknown request status type, abort
+            break;
+    }
+}
+
+// Generator new geometry in threejs scene from render data
+function geometryGenerator(name, vertices, normals, points, lines, visibility) {
+    // Groups make working with sets of objects syntactically clearer
+    // but are almost indentical to a traditional object.
+    // Each group contains all the geometry for a single node.
+    let nodeGeomGroup = new THREE.Group();
+    nodeGeomGroup.name = name;
+
+    // DRAW MESHES //
+
+    // Verify input data contains mesh data
     if (vertices.length > 0 /*&& faces.length > 0*/)
     {
-        // for each mesh construct meshObject and add to group
+        // For each mesh construct a mesh object
         for (let i = 0; i < vertices.length; i++)
         {
             let geometry = new THREE.BufferGeometry();
@@ -269,22 +333,23 @@ function renderDynamoMesh(groupData) {
             mesh.name = "meshGeometry";
             wireframe.name = "wireframeGeometry";
 
-            // check mesh shader visibility from UI
+            // Check mesh shader visibility from UI
             if (materialVisibility == false) { mesh.visible = false; }
 
-            // check mesh wireframe visibility from UI
+            // Check mesh wireframe visibility from UI
             if (wireframeMaterialVisibility == false) { wireframe.visible = false; }
 
+            // Add to group collection
             nodeGeomGroup.add(mesh);
             nodeGeomGroup.add(wireframe);
         }     
     }
-    
-    // TODO: why do small L-shaped lines initially render for points?
-    // LINES from render package
-    let lines = groupData.lines;
 
-    // verify groupData contains line objects
+    // DRAW LINES //
+
+    // TODO: why do small L-shaped lines initially render for points?
+
+    // Verify input data contains line data
     if (lines.length > 0)
     {
         let lineMaterial = new THREE.LineBasicMaterial({
@@ -292,7 +357,7 @@ function renderDynamoMesh(groupData) {
             linewidth: 10 // doesn't do anything - known issue
         });
 
-        // for each line construct lineObject and add to group
+        // For each line construct a line object
         for (let i = 0; i < lines.length; i++) {
             let lineGeometry = new THREE.Geometry();
             lineGeometry.vertices = [];
@@ -303,19 +368,20 @@ function renderDynamoMesh(groupData) {
 
             let line = new THREE.Line(lineGeometry, lineMaterial);
             line.name = "lineGeometry";
+
+            // Add group to collection
             nodeGeomGroup.add(line);
         }
     }
 
-    // Points from render package
-    let points = groupData.points;
+    // DRAW POINTS //
 
-    // verify groupData contains line objects
+    // Verify input data contains point data
     if (points.length > 0) {
 
         let pointMaterial = new THREE.PointsMaterial({ color: 0x009eff, size: 5, sizeAttenuation: false, side: THREE.DoubleSide });
 
-        // for each point set construct pointObject and add to group
+        // For each point set construct a point object
         for (let i = 0; i < points.length; i++) {
             let pointGeometry = new THREE.Geometry();
             pointGeometry.vertices = [];
@@ -326,17 +392,16 @@ function renderDynamoMesh(groupData) {
 
             let pointCloud = new THREE.Points(pointGeometry, pointMaterial);
             pointCloud.name = "pointGeometry";
+
+            // Add to group collection
             nodeGeomGroup.add(pointCloud);
         }
     }
 
     // If displayPreview is false set group visible property before adding to scene
-    if (groupData.displayPreview == false) {
+    if (visibility == false) {
         nodeGeomGroup.visible = false;
     }
 
-    nodeGeomGroups.push(nodeGeomGroup);
-    scene.add(nodeGeomGroup);
-
-    //console.log(scene);
+    return nodeGeomGroup;
 }
