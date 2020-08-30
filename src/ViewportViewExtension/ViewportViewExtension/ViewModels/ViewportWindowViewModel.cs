@@ -145,11 +145,10 @@ namespace ViewportViewExtension.ViewModels
             NodeModel node = sender as NodeModel;
             PropertyChangedEventArgs eventArgs= e as PropertyChangedEventArgs;
             string changedProperty = eventArgs.PropertyName;
-
             if(changedProperty == "IsVisible")
             {
-                // TODO: Dynamo events only require this when hiding
-                // show triggers a workspace update which is already captured
+                // TODO: Due to other Dynamo events this is only require when hiding,
+                // show triggers a different workspace update which is already captured
                 if(node.IsVisible == false)
                 {
                     TransactionType = "togglePreview";
