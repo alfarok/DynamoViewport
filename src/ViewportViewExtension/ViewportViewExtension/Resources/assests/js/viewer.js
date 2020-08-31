@@ -201,6 +201,8 @@ function toggleAxes() {
 
 // Helper function to build THREE objects from render package json
 function renderDynamoMesh(groupData) {
+    console.log(scene.children.length);
+
     // JSON data
     let name = groupData.name;
     let status = groupData.transactionType;
@@ -214,104 +216,32 @@ function renderDynamoMesh(groupData) {
     switch(status) {
         // A Dynamo node has been removed from the graph
         case "remove":
-            // Track possible duplicate objects in the scene
-            var nodeCount = 0
-
-            // Track nodes to remove by uuid
-            var removeUuids = [];
-
-            // Remove all object matching the provided groupData.name
-            try {
-                
-                // Traverse scene for nodes matching in name
-                scene.traverse(function(child) {
-                    if (child instanceof THREE.Group){
-                        // If a child matches by name aka GUID remove it
-                        if (child.name === name) {
-                            //console.log("REMOVING: " + name + "-" + nodeCount);
-                            removeUuids.push(child.id);
-                            nodeCount += 1
-                        }
-                    }
-                });
-
-                // Remove matches (should not modify scene while traversing)
-                for(var i = 0; i < removeUuids.length; i++)
-                {
-                    // Remove by uuid's
-                    var child = scene.getObjectById(removeUuids[i])
-                    scene.remove(child);
-                }
-            }
-            catch(err) {
-                console.log(err)
-            }
+            // Remove the geometry for the removed node
+            var child = scene.getObjectByName(name)
+            scene.remove(child);
 
             break;
 
-        // A Dynamo nodes display preview has been toggled
+        // A Dynamo nodes display preview has been toggled (only triggered when set to false)
         case "togglePreview":
-            // Track possible duplicate objects in the scene
-            var nodeCount = 0
-
-            // Remove all object matching the provided groupData.name
-            try {
-                scene.traverse(function(child) {
-                    if (child instanceof THREE.Group){
-                        // If a child matches by name aka GUID remove it
-                        if (child.name === name) {
-                            //console.log("TOGGLING: " + name + "-" + nodeCount);
-                            if (visibility === true) {
-                                child.visible = true;
-                            }
-                            else {
-                                child.visible = false;
-                            }
-                            nodeCount += 1
-                        }
-                    }
-                });
+            var child = scene.getObjectByName(name);
+            if (visibility === true) {
+                child.visible = true;
             }
-            catch(err) {
-                console.log(err)
+            else {
+                child.visible = false;
             }
 
             break;
 
         // An incoming update could be to create or update existing node geometry
         case "update":
-            // Track possible duplicate objects in the scene
-            var nodeCount = 0
-
-            // Track nodes to remove by uuid
-            var removeUuids = [];
-
-            // Remove all object matching the provided groupData.name
-            try {
-                // Traverse scene for nodes matching in name
-                scene.traverse(function(child) {
-                    if (child instanceof THREE.Group){
-                        // If a child matches by name aka GUID remove it
-                        if (child.name === name) {
-                            //console.log("EXISTING/REPLACING: " + name + "-" + nodeCount);
-                            removeUuids.push(child.id);
-                            nodeCount += 1
-                        }
-                    }
-                });
-
-                // Remove matches (should not modify scene while traversing)
-                for(var i = 0; i < removeUuids.length; i++)
-                {
-                    // Remove by uuid's
-                    var child = scene.getObjectById(removeUuids[i])
-                    scene.remove(child);
-                }
+            var child = scene.getObjectByName(name)
+            if(child != null) {
+                // Remove any existing geometry for this node
+                scene.remove(child);
             }
-            catch(err) {
-                console.log(err)
-            }
-            
+
             // Generator a new geometry instance in the scene
             let nodeGeometry = geometryGenerator(name, vertices, normals, points, lines, visibility);
             // Add geometry collection to scene
