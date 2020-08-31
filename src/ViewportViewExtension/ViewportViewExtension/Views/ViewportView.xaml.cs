@@ -44,7 +44,7 @@ namespace ViewportViewExtension.Views
             if (changedProperty == "RenderData")
             {
                 ViewportWindowViewModel vm = sender as ViewportWindowViewModel;
-                string jsonString = vm.RenderData;
+                string jsonString = vm.RenderData();
 
                 if (!string.IsNullOrWhiteSpace(jsonString))
                 {

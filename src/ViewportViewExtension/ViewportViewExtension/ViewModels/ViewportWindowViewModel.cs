@@ -21,10 +21,13 @@ namespace ViewportViewExtension.ViewModels
         public string TransactionType { get; set; }
         public string PackagePath { get; set; }
         public string NodeGuid { get; set;  }
-        public bool DisplayPreview { get; set; } = true; // C#6.0
+        public bool DisplayPreview { get; set; }
 
         // Find render nodes and build THREE meshes
-        public string RenderData => $"{getRenderPackages()}"; // C#6.0
+        public string RenderData()
+        {
+            return getRenderPackages();
+        }
 
         /// <summary>
         /// Location of JS assets

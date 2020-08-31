@@ -3,13 +3,19 @@ DynamoViewport is a [Dynamo](https://github.com/DynamoDS/Dynamo) view extension 
 
 [Viewport Demo Video](https://youtu.be/qXHMFWbzC-0)
 
-![IMG](https://github.com/alfarok/DynamoViewport/blob/CEF_Embedded/images/DynamoViewportExample.JPG?raw=true)
+Examples:
 
-![IMG](https://github.com/alfarok/DynamoViewport/blob/master/images/SurfaceExample.JPG?raw=true)
+**View Extensions Panel** (current master)
+![IMG](./images/extensions-panel.png)
 
-![IMG](https://github.com/alfarok/DynamoViewport/blob/master/images/ReplicationExample.JPG?raw=true)
+**Library Panel**
+![IMG](./images/DynamoViewportExample.jpg)
 
-![IMG](https://github.com/alfarok/DynamoViewport/blob/CEF_Embedded/images/DynamoViewportEmbedded.gif?raw=true)
+**Transparent Window**
+![IMG](./images/SurfaceExample.jpg)
+
+**Usage**
+![IMG](./images/DynamoViewportEmbedded.gif)
 
 ### CEF Sharp
 CEF is either initialized by 
@@ -17,7 +23,7 @@ CEF is either initialized by
 - Revit in Dynamo for Revit 2020+
 - Possibly another host application or plugin that is using CEF in the same process
 
-Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initiatization in Dynamo 1.3.X and older.  The master branch is currently built against DynamoCore v2.7+, for legacy core support see additional branches.  The latest Dynamo NuGet dependency specs can be found [here](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/packages.config#L8).
+Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering was disabled during CEF initialization in Dynamo 1.3.X and older.  The master branch is currently built against DynamoCore v2.7+, for legacy core support see additional branches.  The latest Dynamo NuGet dependency specs can be found [here](https://github.com/alfarok/DynamoViewport/blob/master/src/ViewportViewExtension/ViewportViewExtension/packages.config#L8).
 
 ### Build/Install/Run Viewport
 - Clone repo
@@ -28,4 +34,7 @@ Dynamo Viewport is exclusively built against DynamoCore v2.0 as GPU rendering wa
 - If built and copied successfully the `Launch Viewport` menu option should appear under the `View` tab on the main Dynamo toolbar
 
 ### Debugging
-`http://localhost:8088/`
+
+External [chrome debugger window](https://github.com/alfarok/DynamoViewport/blob/be1e56c87e53cc8f1169c9292fb3ca4f95ece1b9/src/ViewportViewExtension/ViewportViewExtension/ViewportViewController.cs#L149) will populate automatically when running dev builds.
+
+CEF Debugging: `http://localhost:8088/`
