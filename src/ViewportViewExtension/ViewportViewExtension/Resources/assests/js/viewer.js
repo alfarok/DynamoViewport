@@ -214,40 +214,47 @@ function renderDynamoMesh(groupData) {
     switch(status) {
         // A Dynamo node has been removed from the graph
         case "remove":
-            // Remove all object matching the provided groupData.name
-            //console.log("ATTEMPING TO REMOVE: " + name);
-
             // Track possible duplicate objects in the scene
             var nodeCount = 0
 
-            // This is not performative but attempts to prevent async objects from accumulating 
+            // Track nodes to remove by uuid
+            var removeUuids = [];
+
+            // Remove all object matching the provided groupData.name
             try {
+                
+                // Traverse scene for nodes matching in name
                 scene.traverse(function(child) {
                     if (child instanceof THREE.Group){
                         // If a child matches by name aka GUID remove it
                         if (child.name === name) {
                             //console.log("REMOVING: " + name + "-" + nodeCount);
-                            scene.remove(child);
+                            removeUuids.push(child.id);
                             nodeCount += 1
                         }
                     }
                 });
+
+                // Remove matches (should not modify scene while traversing)
+                for(var i = 0; i < removeUuids.length; i++)
+                {
+                    // Remove by uuid's
+                    var child = scene.getObjectById(removeUuids[i])
+                    scene.remove(child);
+                }
             }
             catch(err) {
-                //console.log(err)
+                console.log(err)
             }
 
             break;
 
         // A Dynamo nodes display preview has been toggled
         case "togglePreview":
-            // Remove all object matching the provided groupData.name
-            //console.log("ATTEMPING TO TOGGLE: " + name);
-
             // Track possible duplicate objects in the scene
             var nodeCount = 0
 
-            // This is not performative but attempts to prevent async objects from accumulating
+            // Remove all object matching the provided groupData.name
             try {
                 scene.traverse(function(child) {
                     if (child instanceof THREE.Group){
@@ -266,34 +273,43 @@ function renderDynamoMesh(groupData) {
                 });
             }
             catch(err) {
-                //console.log(err)
+                console.log(err)
             }
 
             break;
 
         // An incoming update could be to create or update existing node geometry
         case "update":
-            // Remove all object matching the provided groupData.name
-            //console.log("ATTEMPING TO UPDATE: " + name);
-
             // Track possible duplicate objects in the scene
             var nodeCount = 0
 
-            // TODO: This try/catch is required due to not being able to traverse the scene after a node is reshown?
+            // Track nodes to remove by uuid
+            var removeUuids = [];
+
+            // Remove all object matching the provided groupData.name
             try {
+                // Traverse scene for nodes matching in name
                 scene.traverse(function(child) {
                     if (child instanceof THREE.Group){
                         // If a child matches by name aka GUID remove it
                         if (child.name === name) {
                             //console.log("EXISTING/REPLACING: " + name + "-" + nodeCount);
-                            scene.remove(child);
+                            removeUuids.push(child.id);
                             nodeCount += 1
                         }
                     }
                 });
+
+                // Remove matches (should not modify scene while traversing)
+                for(var i = 0; i < removeUuids.length; i++)
+                {
+                    // Remove by uuid's
+                    var child = scene.getObjectById(removeUuids[i])
+                    scene.remove(child);
+                }
             }
             catch(err) {
-                //console.log(err)
+                console.log(err)
             }
             
             // Generator a new geometry instance in the scene

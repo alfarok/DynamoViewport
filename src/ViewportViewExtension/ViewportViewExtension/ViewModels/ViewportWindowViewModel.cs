@@ -152,7 +152,7 @@ namespace ViewportViewExtension.ViewModels
             {
                 // TODO: Due to other Dynamo events this is only require when hiding,
                 // show triggers a different workspace update which is already captured
-                if(node.IsVisible == false)
+                if (node.IsVisible == false)
                 {
                     TransactionType = "togglePreview";
                     NodeGuid = node.GUID.ToString();
