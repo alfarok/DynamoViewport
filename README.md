@@ -6,13 +6,13 @@ DynamoViewport is a [Dynamo](https://github.com/DynamoDS/Dynamo) view extension 
 Examples:
 
 **View Extensions Panel** (current master)
-![IMG](./images/extensions-panel.png)
+![IMG](./images/extensions-panel.PNG)
 
 **Library Panel**
-![IMG](./images/DynamoViewportExample.jpg)
+![IMG](./images/DynamoViewportExample.JPG)
 
 **Transparent Window**
-![IMG](./images/SurfaceExample.jpg)
+![IMG](./images/SurfaceExample.JPG)
 
 **Usage**
 ![IMG](./images/DynamoViewportEmbedded.gif)
