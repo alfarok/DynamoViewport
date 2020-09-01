@@ -8,6 +8,7 @@ using Dynamo.Extensions;
 using Dynamo.Graph.Nodes;
 using Dynamo.Graph.Workspaces;
 using Dynamo.Visualization;
+using Dynamo.Wpf.Extensions;
 using Newtonsoft.Json;
 
 namespace ViewportViewExtension.ViewModels
@@ -89,11 +90,15 @@ namespace ViewportViewExtension.ViewModels
             return output;
         }
 
-        public ViewportWindowViewModel(ReadyParams p, string defaultPackagePath)
+        public ViewportWindowViewModel(ViewLoadedParams p, string defaultPackagePath)
         {
             // Save a reference to our loaded parameters which
             // is required in order to access the workspaces
             readyParams = p;
+
+            // TODO: This API will be obsoleted in future Dynamo releases
+            // Turn off Dynamo background preview if it's enabled
+            (p.BackgroundPreviewViewModel as Dynamo.Wpf.ViewModels.Watch3D.HelixWatch3DViewModel).Active = false;
 
             // Save a reference to the default packages directory
             PackagePath = defaultPackagePath;
